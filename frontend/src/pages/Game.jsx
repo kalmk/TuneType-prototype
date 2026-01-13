@@ -25,19 +25,16 @@ const Game = () => {
     const line = lyrics[currentLineIndex];
     if (!line) return;
 
-    // Remove previous listener if exists
     if (audio._onTimeUpdate) {
       audio.removeEventListener("timeupdate", audio._onTimeUpdate);
     }
 
-    // Set up new listener
     audio._onTimeUpdate = () => {
       if (audio.currentTime >= line.end) {
         audio.pause();
         audio.removeEventListener("timeupdate", audio._onTimeUpdate);
         console.log(`Line ${currentLineIndex + 1} ended`);
 
-        // If last line finished → show finished message
         if (currentLineIndex === lyrics.length - 1) {
           setIsFinished(true);
         }
@@ -58,13 +55,11 @@ const Game = () => {
     setCurrentLineIndex((prev) => {
       const nextIndex = prev + 1;
 
-      // If next line exceeds lyrics → mark finished
       if (nextIndex >= lyrics.length) {
         setIsFinished(true);
-        return prev; // stay on last line
+        return prev;
       }
 
-      // Moving forward → ensure not finished
       if (isFinished) setIsFinished(false);
       return nextIndex;
     });
@@ -77,10 +72,7 @@ const Game = () => {
 
     setCurrentLineIndex((prev) => {
       const newIndex = prev - 1 < 0 ? 0 : prev - 1;
-
-      // Reset finished if going back
       if (isFinished) setIsFinished(false);
-
       return newIndex;
     });
   };
@@ -90,15 +82,12 @@ const Game = () => {
     if (!audioRef.current) return;
 
     if (currentLineIndex === 0) {
-      // Already at first line → just replay
       playLine();
     } else {
-      // Reset to first line
       audioRef.current.pause();
       setCurrentLineIndex(0);
     }
 
-    // Reset finished state
     setIsFinished(false);
   };
 
@@ -109,86 +98,91 @@ const Game = () => {
     const newSpeed = speed === 1 ? 0.5 : 1;
     setSpeed(newSpeed);
 
-    // Apply immediately to current line without restarting
     audioRef.current.playbackRate = newSpeed;
   };
 
-  // Play line whenever currentLineIndex changes
   useEffect(() => {
     if (!isFinished) playLine();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLineIndex]);
 
   return (
-    <div className="p-6 flex justify-between">
-      {/* Left side: song info and lyrics */}
-      <div>
-        <h1 className="text-2xl font-bold mb-2">Playing: {name}</h1>
-        <h2 className="text-lg mb-4">
-          Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
-        </h2>
-        {isFinished ? (
-          <p className="text-green-600 font-bold text-2xl mt-4 text-center">
-            Good job!
-          </p>
-        ) : (
-          <p className="mt-4">Current line: {lyrics[currentLineIndex]?.text}</p>
-        )}
+    <div className="p-6">
+      {/* Header: Back to Song Selection */}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={() => navigate("/songs")}
+          className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+        >
+          Back to Song Selection
+        </button>
       </div>
 
-      {/* Right side: button section */}
-      <div className="flex flex-col gap-2">
-        {isFinished ? (
-          <>
-            <button
-              onClick={restartGame}
-              className="px-4 py-2 bg-red-500 text-white rounded"
-            >
-              Retry
-            </button>
-            <button
-              onClick={() => navigate("/songs")}
-              className="px-4 py-2 bg-gray-500 text-white rounded"
-            >
-              Choose a different song
-            </button>
-          </>
-        ) : (
-          <>
-            {currentLineIndex > 0 && (
+      {/* Main content */}
+      <div className="flex justify-between">
+        {/* Left: song info and lyrics */}
+        <div>
+          <h1 className="text-2xl font-bold mb-2">Playing: {name}</h1>
+          <h2 className="text-lg mb-4">
+            Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
+          </h2>
+          {isFinished ? (
+            <p className="text-green-600 font-bold text-2xl mt-4 text-center">
+              Good job!
+            </p>
+          ) : (
+            <p className="mt-4">Current line: {lyrics[currentLineIndex]?.text}</p>
+          )}
+        </div>
+
+        {/* Right: button section */}
+        <div className="flex flex-col gap-2">
+          {isFinished ? (
+            <>
               <button
-                onClick={previousLine}
-                className="px-4 py-2 bg-gray-500 text-white rounded"
+                onClick={restartGame}
+                className="px-4 py-2 bg-red-500 text-white rounded"
               >
-                Previous Line
+                Retry
               </button>
-            )}
-            <button
-              onClick={playLine}
-              className="px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              Replay Line
-            </button>
-            <button
-              onClick={skipLine}
-              className="px-4 py-2 bg-green-500 text-white rounded"
-            >
-              Skip Line
-            </button>
-            <button
-              onClick={restartGame}
-              className="px-4 py-2 bg-red-500 text-white rounded"
-            >
-              Restart Game
-            </button>
-            <button
-              onClick={toggleSpeed}
-              className="px-4 py-2 bg-purple-500 text-white rounded"
-            >
-              Speed: {speed}x
-            </button>
-          </>
-        )}
+            </>
+          ) : (
+            <>
+              {currentLineIndex > 0 && (
+                <button
+                  onClick={previousLine}
+                  className="px-4 py-2 bg-gray-500 text-white rounded"
+                >
+                  Previous Line
+                </button>
+              )}
+              <button
+                onClick={playLine}
+                className="px-4 py-2 bg-blue-500 text-white rounded"
+              >
+                Replay Line
+              </button>
+              <button
+                onClick={skipLine}
+                className="px-4 py-2 bg-green-500 text-white rounded"
+              >
+                Skip Line
+              </button>
+              <button
+                onClick={restartGame}
+                className="px-4 py-2 bg-red-500 text-white rounded"
+              >
+                Restart Game
+              </button>
+              <button
+                onClick={toggleSpeed}
+                className="px-4 py-2 bg-purple-500 text-white rounded"
+              >
+                Speed: {speed}x
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       <audio ref={audioRef} src={audioSrc} />
