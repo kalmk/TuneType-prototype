@@ -6,7 +6,9 @@ const Game = () => {
   const { songId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+
   const mode = searchParams.get("mode") || "normal";
+  const script = searchParams.get("script") || "kana"; // <-- get Kana/Kanji
 
   const song = songs.find((s) => s.id === songId);
   if (!song) return <div>Song not found!</div>;
@@ -14,7 +16,7 @@ const Game = () => {
   const { name, audioSrc, lyrics } = song;
 
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [speed, setSpeed] = useState(1); // 1x by default
+  const [speed, setSpeed] = useState(1);
   const [isFinished, setIsFinished] = useState(false);
   const audioRef = useRef(null);
 
@@ -33,7 +35,6 @@ const Game = () => {
       if (audio.currentTime >= line.end) {
         audio.pause();
         audio.removeEventListener("timeupdate", audio._onTimeUpdate);
-        console.log(`Line ${currentLineIndex + 1} ended`);
 
         if (currentLineIndex === lyrics.length - 1) {
           setIsFinished(true);
@@ -54,18 +55,16 @@ const Game = () => {
 
     setCurrentLineIndex((prev) => {
       const nextIndex = prev + 1;
-
       if (nextIndex >= lyrics.length) {
         setIsFinished(true);
         return prev;
       }
-
       if (isFinished) setIsFinished(false);
       return nextIndex;
     });
   };
 
-  // Go to the previous line
+  // Previous line
   const previousLine = () => {
     if (!audioRef.current) return;
     audioRef.current.pause();
@@ -77,7 +76,7 @@ const Game = () => {
     });
   };
 
-  // Restart the game
+  // Restart game
   const restartGame = () => {
     if (!audioRef.current) return;
 
@@ -87,20 +86,19 @@ const Game = () => {
       audioRef.current.pause();
       setCurrentLineIndex(0);
     }
-
     setIsFinished(false);
   };
 
-  // Toggle speed between 1x and 0.5x
+  // Toggle speed
   const toggleSpeed = () => {
     if (!audioRef.current) return;
 
     const newSpeed = speed === 1 ? 0.5 : 1;
     setSpeed(newSpeed);
-
     audioRef.current.playbackRate = newSpeed;
   };
 
+  // Play line whenever currentLineIndex changes
   useEffect(() => {
     if (!isFinished) playLine();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,7 +106,7 @@ const Game = () => {
 
   return (
     <div className="p-6">
-      {/* Header: Back to Song Selection */}
+      {/* Header */}
       <div className="flex justify-end mb-4">
         <button
           onClick={() => navigate("/songs")}
@@ -124,28 +122,30 @@ const Game = () => {
         <div>
           <h1 className="text-2xl font-bold mb-2">Playing: {name}</h1>
           <h2 className="text-lg mb-4">
-            Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
+            Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)} | Script:{" "}
+            {script.charAt(0).toUpperCase() + script.slice(1)}
           </h2>
+
           {isFinished ? (
             <p className="text-green-600 font-bold text-2xl mt-4 text-center">
               Good job!
             </p>
           ) : (
-            <p className="mt-4">Current line: {lyrics[currentLineIndex]?.text}</p>
+            <p className="mt-4">
+              Current line: {lyrics[currentLineIndex]?.[script]}
+            </p>
           )}
         </div>
 
-        {/* Right: button section */}
+        {/* Right: buttons */}
         <div className="flex flex-col gap-2">
           {isFinished ? (
-            <>
-              <button
-                onClick={restartGame}
-                className="px-4 py-2 bg-red-500 text-white rounded"
-              >
-                Retry
-              </button>
-            </>
+            <button
+              onClick={restartGame}
+              className="px-4 py-2 bg-red-500 text-white rounded"
+            >
+              Retry
+            </button>
           ) : (
             <>
               {currentLineIndex > 0 && (
