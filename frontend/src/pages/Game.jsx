@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { songs } from "../data/songs";
 
 const Game = () => {
   const { songId } = useParams();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const mode = searchParams.get("mode") || "normal";
 
   const song = songs.find((s) => s.id === songId);
@@ -14,6 +15,7 @@ const Game = () => {
 
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [speed, setSpeed] = useState(1); // 1x by default
+  const [isFinished, setIsFinished] = useState(false);
   const audioRef = useRef(null);
 
   // Play the current line
@@ -34,6 +36,11 @@ const Game = () => {
         audio.pause();
         audio.removeEventListener("timeupdate", audio._onTimeUpdate);
         console.log(`Line ${currentLineIndex + 1} ended`);
+
+        // If last line finished → show finished message
+        if (currentLineIndex === lyrics.length - 1) {
+          setIsFinished(true);
+        }
       }
     };
 
@@ -50,7 +57,16 @@ const Game = () => {
 
     setCurrentLineIndex((prev) => {
       const nextIndex = prev + 1;
-      return nextIndex >= lyrics.length ? prev : nextIndex;
+
+      // If next line exceeds lyrics → mark finished
+      if (nextIndex >= lyrics.length) {
+        setIsFinished(true);
+        return prev; // stay on last line
+      }
+
+      // Moving forward → ensure not finished
+      if (isFinished) setIsFinished(false);
+      return nextIndex;
     });
   };
 
@@ -59,22 +75,32 @@ const Game = () => {
     if (!audioRef.current) return;
     audioRef.current.pause();
 
-    setCurrentLineIndex((prev) => (prev - 1 < 0 ? 0 : prev - 1));
+    setCurrentLineIndex((prev) => {
+      const newIndex = prev - 1 < 0 ? 0 : prev - 1;
+
+      // Reset finished if going back
+      if (isFinished) setIsFinished(false);
+
+      return newIndex;
+    });
   };
 
   // Restart the game
   const restartGame = () => {
-  if (!audioRef.current) return;
+    if (!audioRef.current) return;
 
-  if (currentLineIndex === 0) {
-    // Already at first line → just replay
-    playLine();
-  } else {
-    // Reset to first line
-    audioRef.current.pause();
-    setCurrentLineIndex(0);
-  }
-};
+    if (currentLineIndex === 0) {
+      // Already at first line → just replay
+      playLine();
+    } else {
+      // Reset to first line
+      audioRef.current.pause();
+      setCurrentLineIndex(0);
+    }
+
+    // Reset finished state
+    setIsFinished(false);
+  };
 
   // Toggle speed between 1x and 0.5x
   const toggleSpeed = () => {
@@ -89,7 +115,7 @@ const Game = () => {
 
   // Play line whenever currentLineIndex changes
   useEffect(() => {
-    playLine();
+    if (!isFinished) playLine();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLineIndex]);
 
@@ -101,43 +127,68 @@ const Game = () => {
         <h2 className="text-lg mb-4">
           Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
         </h2>
-        <p className="mt-4">Current line: {lyrics[currentLineIndex]?.text}</p>
+        {isFinished ? (
+          <p className="text-green-600 font-bold text-2xl mt-4 text-center">
+            Good job!
+          </p>
+        ) : (
+          <p className="mt-4">Current line: {lyrics[currentLineIndex]?.text}</p>
+        )}
       </div>
 
       {/* Right side: button section */}
       <div className="flex flex-col gap-2">
-        {currentLineIndex > 0 && (
-          <button
-            onClick={previousLine}
-            className="px-4 py-2 bg-gray-500 text-white rounded"
-          >
-            Previous Line
-          </button>
+        {isFinished ? (
+          <>
+            <button
+              onClick={restartGame}
+              className="px-4 py-2 bg-red-500 text-white rounded"
+            >
+              Retry
+            </button>
+            <button
+              onClick={() => navigate("/songs")}
+              className="px-4 py-2 bg-gray-500 text-white rounded"
+            >
+              Choose a different song
+            </button>
+          </>
+        ) : (
+          <>
+            {currentLineIndex > 0 && (
+              <button
+                onClick={previousLine}
+                className="px-4 py-2 bg-gray-500 text-white rounded"
+              >
+                Previous Line
+              </button>
+            )}
+            <button
+              onClick={playLine}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Replay Line
+            </button>
+            <button
+              onClick={skipLine}
+              className="px-4 py-2 bg-green-500 text-white rounded"
+            >
+              Skip Line
+            </button>
+            <button
+              onClick={restartGame}
+              className="px-4 py-2 bg-red-500 text-white rounded"
+            >
+              Restart Game
+            </button>
+            <button
+              onClick={toggleSpeed}
+              className="px-4 py-2 bg-purple-500 text-white rounded"
+            >
+              Speed: {speed}x
+            </button>
+          </>
         )}
-        <button
-          onClick={playLine}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Replay Line
-        </button>
-        <button
-          onClick={skipLine}
-          className="px-4 py-2 bg-green-500 text-white rounded"
-        >
-          Skip Line
-        </button>
-        <button
-          onClick={restartGame}
-          className="px-4 py-2 bg-red-500 text-white rounded"
-        >
-          Restart Game
-        </button>
-        <button
-          onClick={toggleSpeed}
-          className="px-4 py-2 bg-purple-500 text-white rounded"
-        >
-          Speed: {speed}x
-        </button>
       </div>
 
       <audio ref={audioRef} src={audioSrc} />
