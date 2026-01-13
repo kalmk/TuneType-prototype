@@ -5,10 +5,11 @@ export const songs = [
     name: "Rabbit",
     audioSrc: "/assets/Rabbit_xf.mp3",
     lyrics: [
-      { text: "First line of lyrics", start: 0, end: 3 },
-      { text: "Second line of lyrics", start: 3, end: 6 },
-      { text: "Third line of lyrics", start: 6, end: 9 },
-      { text: "Fourth line of lyrics", start: 9, end: 12 },
+      { text: "First line of lyrics", start: 0, end: 8.5 },
+      { text: "Second line of lyrics", start: 8.5, end: 11.5 },
+      { text: "Third line of lyrics", start: 11.5, end: 14.5 },
+      { text: "Fourth line of lyrics", start: 14.5, end: 22 },
+      { text: "Fifth line of lyrics", start: 22, end: 30 },
     ],
   },
   // you can add more songs here later
