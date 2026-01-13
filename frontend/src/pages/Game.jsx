@@ -64,10 +64,17 @@ const Game = () => {
 
   // Restart the game
   const restartGame = () => {
-    if (!audioRef.current) return;
+  if (!audioRef.current) return;
+
+  if (currentLineIndex === 0) {
+    // Already at first line → just replay
+    playLine();
+  } else {
+    // Reset to first line
     audioRef.current.pause();
     setCurrentLineIndex(0);
-  };
+  }
+};
 
   // Toggle speed between 1x and 0.5x
   const toggleSpeed = () => {
@@ -99,12 +106,14 @@ const Game = () => {
 
       {/* Right side: button section */}
       <div className="flex flex-col gap-2">
-        <button
-          onClick={previousLine}
-          className="px-4 py-2 bg-gray-500 text-white rounded"
-        >
-          Previous Line
-        </button>
+        {currentLineIndex > 0 && (
+          <button
+            onClick={previousLine}
+            className="px-4 py-2 bg-gray-500 text-white rounded"
+          >
+            Previous Line
+          </button>
+        )}
         <button
           onClick={playLine}
           className="px-4 py-2 bg-blue-500 text-white rounded"
