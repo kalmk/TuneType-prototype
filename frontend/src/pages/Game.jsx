@@ -8,7 +8,7 @@ const Game = () => {
   const navigate = useNavigate();
 
   const mode = searchParams.get("mode") || "normal";
-  const script = searchParams.get("script") || "kana"; // <-- get Kana/Kanji
+  const script = searchParams.get("script") || "kana"; // Kana or Kanji
 
   const song = songs.find((s) => s.id === songId);
   if (!song) return <div>Song not found!</div>;
@@ -16,6 +16,7 @@ const Game = () => {
   const { name, audioSrc, lyrics } = song;
 
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [userInput, setUserInput] = useState(""); // User typing input
   const [speed, setSpeed] = useState(1);
   const [isFinished, setIsFinished] = useState(false);
   const audioRef = useRef(null);
@@ -79,20 +80,15 @@ const Game = () => {
   // Restart game
   const restartGame = () => {
     if (!audioRef.current) return;
-
-    if (currentLineIndex === 0) {
-      playLine();
-    } else {
-      audioRef.current.pause();
-      setCurrentLineIndex(0);
-    }
+    audioRef.current.pause();
+    setCurrentLineIndex(0);
+    setUserInput("");
     setIsFinished(false);
   };
 
   // Toggle speed
   const toggleSpeed = () => {
     if (!audioRef.current) return;
-
     const newSpeed = speed === 1 ? 0.5 : 1;
     setSpeed(newSpeed);
     audioRef.current.playbackRate = newSpeed;
@@ -101,25 +97,31 @@ const Game = () => {
   // Play line whenever currentLineIndex changes
   useEffect(() => {
     if (!isFinished) playLine();
+    setUserInput(""); // Clear input on line change
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLineIndex]);
 
+  // Handle Enter key for line progression
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      const currentLine = lyrics[currentLineIndex]?.[script];
+      if (!currentLine) return;
+
+      if (userInput === currentLine) {
+        setUserInput("");
+        skipLine();
+      } else {
+        alert("Incorrect! Try again.");
+      }
+    }
+  };
+
   return (
     <div className="p-6">
-      {/* Header */}
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={() => navigate("/songs")}
-          className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
-        >
-          Back to Song Selection
-        </button>
-      </div>
-
       {/* Main content */}
       <div className="flex justify-between">
         {/* Left: song info and lyrics */}
-        <div>
+        <div className="w-2/3">
           <h1 className="text-2xl font-bold mb-2">Playing: {name}</h1>
           <h2 className="text-lg mb-4">
             Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)} | Script:{" "}
@@ -131,18 +133,42 @@ const Game = () => {
               Good job!
             </p>
           ) : (
-            <p className="mt-4">
-              Current line: {lyrics[currentLineIndex]?.[script]}
-            </p>
+            <>
+              <p className="mt-4 text-xl">
+                Current line: {lyrics[currentLineIndex]?.[script]}
+              </p>
+
+              {/* Typing input */}
+              <input
+                type="text"
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Type the lyrics here..."
+                className="mt-2 p-2 border rounded w-full text-lg"
+                autoFocus
+              />
+            </>
           )}
         </div>
 
-        {/* Right: buttons */}
-        <div className="flex flex-col gap-2">
+        {/* Right: header + buttons */}
+        <div className="w-1/3 flex flex-col items-center gap-2">
+          {/* Header button stacked on top of other buttons */}
+          <div className="mb-4 w-full flex justify-center">
+            <button
+              onClick={() => navigate("/songs")}
+              className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+            >
+              Back to Song Selection
+            </button>
+          </div>
+
+          {/* Buttons */}
           {isFinished ? (
             <button
               onClick={restartGame}
-              className="px-4 py-2 bg-red-500 text-white rounded"
+              className="px-4 py-2 bg-red-500 text-white rounded w-auto"
             >
               Retry
             </button>
@@ -151,32 +177,32 @@ const Game = () => {
               {currentLineIndex > 0 && (
                 <button
                   onClick={previousLine}
-                  className="px-4 py-2 bg-gray-500 text-white rounded"
+                  className="px-4 py-2 bg-gray-500 text-white rounded w-auto"
                 >
                   Previous Line
                 </button>
               )}
               <button
                 onClick={playLine}
-                className="px-4 py-2 bg-blue-500 text-white rounded"
+                className="px-4 py-2 bg-blue-500 text-white rounded w-auto"
               >
                 Replay Line
               </button>
               <button
                 onClick={skipLine}
-                className="px-4 py-2 bg-green-500 text-white rounded"
+                className="px-4 py-2 bg-green-500 text-white rounded w-auto"
               >
                 Skip Line
               </button>
               <button
                 onClick={restartGame}
-                className="px-4 py-2 bg-red-500 text-white rounded"
+                className="px-4 py-2 bg-red-500 text-white rounded w-auto"
               >
                 Restart Game
               </button>
               <button
                 onClick={toggleSpeed}
-                className="px-4 py-2 bg-purple-500 text-white rounded"
+                className="px-4 py-2 bg-purple-500 text-white rounded w-auto"
               >
                 Speed: {speed}x
               </button>
