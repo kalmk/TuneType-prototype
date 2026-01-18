@@ -100,7 +100,6 @@ const Game = () => {
   useEffect(() => {
     if (!isFinished) playLine();
     setUserInput(""); // Clear input on line change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLineIndex]);
 
   // Handle Enter key for line progression
