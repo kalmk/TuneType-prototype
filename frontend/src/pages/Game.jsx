@@ -28,6 +28,7 @@ const Game = () => {
     const line = lyrics[currentLineIndex];
     if (!line) return;
 
+    // Remove previous listener if exists
     if (audio._onTimeUpdate) {
       audio.removeEventListener("timeupdate", audio._onTimeUpdate);
     }
@@ -36,10 +37,6 @@ const Game = () => {
       if (audio.currentTime >= line.end) {
         audio.pause();
         audio.removeEventListener("timeupdate", audio._onTimeUpdate);
-
-        if (currentLineIndex === lyrics.length - 1) {
-          setIsFinished(true);
-        }
       }
     };
 
