@@ -5,7 +5,7 @@ const SongSelect = () => {
   const navigate = useNavigate();
 
   // Minimal song list (add more later)
-  const songs = [{ id: "rabbit", name: "Rabbit" }];
+  const songs = [{ id: "rabbit", name: "うさぎ" }];
 
   const [selectedSong, setSelectedSong] = useState(null);
   const [selectedMode, setSelectedMode] = useState("normal");

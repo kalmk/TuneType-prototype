@@ -2,7 +2,7 @@
 export const songs = [
   {
     id: "rabbit",
-    name: "Rabbit",
+    name: "うさぎ",
     audioSrc: "/assets/Rabbit_xf.mp3",
     lyrics: [
       { kana: "...", kanji: "...", start: 0, end: 8.5 },
