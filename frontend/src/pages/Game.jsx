@@ -37,6 +37,11 @@ const Game = () => {
       if (audio.currentTime >= line.end) {
         audio.pause();
         audio.removeEventListener("timeupdate", audio._onTimeUpdate);
+
+        // Automatically skip "..." lines
+        if (line.kana === "...") {
+          skipLine();
+        }
       }
     };
 
@@ -104,11 +109,14 @@ const Game = () => {
       const currentLine = lyrics[currentLineIndex]?.[script];
       if (!currentLine) return;
 
-      if (userInput === currentLine) {
-        setUserInput("");
-        skipLine();
-      } else {
-        alert("Incorrect! Try again.");
+      // Only proceed for non-"..." lines
+      if (currentLine !== "...") {
+        if (userInput === currentLine) {
+          setUserInput("");
+          skipLine();
+        } else {
+          alert("Incorrect! Try again.");
+        }
       }
     }
   };
@@ -151,16 +159,18 @@ const Game = () => {
               {/* Highlighted current line */}
               <p className="mt-4 text-xl">{renderHighlightedLine()}</p>
 
-              {/* Typing input */}
-              <input
-                type="text"
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Type the lyrics here..."
-                className="mt-2 p-2 border rounded w-full text-lg"
-                autoFocus
-              />
+              {/* Typing input only if line is not "..." */}
+              {lyrics[currentLineIndex]?.kana !== "..." && (
+                <input
+                  type="text"
+                  value={userInput}
+                  onChange={(e) => setUserInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Type the lyrics here..."
+                  className="mt-2 p-2 border rounded w-full text-lg"
+                  autoFocus
+                />
+              )}
             </>
           )}
         </div>
