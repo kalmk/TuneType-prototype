@@ -24,7 +24,6 @@ const Game = () => {
   const audioRef = useRef(null);
 
   /* ================= AUDIO ================= */
-
   const playLine = () => {
     if (!audioRef.current) return;
     const audio = audioRef.current;
@@ -40,9 +39,7 @@ const Game = () => {
         audio.pause();
         audio.removeEventListener("timeupdate", audio._onTimeUpdate);
 
-        if (line.kana === "...") {
-          skipLine();
-        }
+        if (line.kana === "...") skipLine();
       }
     };
 
@@ -53,7 +50,6 @@ const Game = () => {
   };
 
   /* ================= GAME FLOW ================= */
-
   const skipLine = () => {
     if (!audioRef.current) return;
     audioRef.current.pause();
@@ -98,9 +94,7 @@ const Game = () => {
   const toggleSpeed = () => {
     const newSpeed = speed === 1 ? 0.5 : 1;
     setSpeed(newSpeed);
-    if (audioRef.current) {
-      audioRef.current.playbackRate = newSpeed;
-    }
+    if (audioRef.current) audioRef.current.playbackRate = newSpeed;
   };
 
   useEffect(() => {
@@ -109,22 +103,15 @@ const Game = () => {
   }, [currentLineIndex]);
 
   /* ================= INPUT ================= */
-
   const handleKeyDown = (e) => {
     if (e.key !== "Enter") return;
-
     const correct = lyrics[currentLineIndex]?.[script];
     if (!correct || correct === "...") return;
 
     if (mode === "normal") {
-      if (userInput === correct) {
-        skipLine();
-      } else {
-        alert("Incorrect! Try again.");
-      }
-    } else {
-      skipLine();
-    }
+      if (userInput === correct) skipLine();
+      else alert("Incorrect! Try again.");
+    } else skipLine();
   };
 
   const renderHighlightedLine = () => {
@@ -143,7 +130,6 @@ const Game = () => {
   };
 
   /* ================= UI ================= */
-
   return (
     <div className="p-6 min-h-screen flex items-center justify-center bg-gray-50">
       <div className="flex flex-col md:flex-row gap-6 w-full max-w-6xl">
@@ -151,7 +137,7 @@ const Game = () => {
         <div className="md:w-2/3 flex flex-col items-center bg-gray-100 p-6 rounded-2xl shadow-md">
           <h1 className="text-2xl font-bold mb-1">{name}</h1>
 
-          {/* Mode & Script badges (static) */}
+          {/* Mode & Script badges */}
           <div className="flex gap-3 mb-6">
             <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold tracking-wide cursor-default">
               Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
@@ -166,28 +152,33 @@ const Game = () => {
               <div className="w-full">
                 <h2 className="text-2xl font-bold mb-4 text-center">Results</h2>
 
-                <div className="grid grid-cols-4 gap-4 font-semibold border-b pb-2 mb-2">
+                <div className="grid grid-cols-3 gap-4 font-semibold border-b pb-2 mb-2">
                   <div>#</div>
                   <div>Correct</div>
                   <div>Your Answer</div>
-                  <div>Result</div>
                 </div>
 
                 {lyrics.map((line, idx) => {
                   const correct = line[script];
                   const answer = userInputs[idx] || "";
                   const isEllipsis = correct === "...";
-                  const ok = !isEllipsis && correct === answer;
 
                   return (
                     <div
                       key={idx}
-                      className="grid grid-cols-4 gap-4 py-1 border-b"
+                      className="grid grid-cols-3 gap-4 py-1 border-b items-center"
                     >
                       <div>{idx + 1}</div>
                       <div>{correct}</div>
-                      <div>{isEllipsis ? "—" : answer}</div>
-                      <div>{isEllipsis ? "—" : ok ? "✅" : "❌"}</div>
+                      <div
+                        className={
+                          !isEllipsis && answer !== correct
+                            ? "text-red-500 font-semibold"
+                            : ""
+                        }
+                      >
+                        {isEllipsis ? "—" : answer}
+                      </div>
                     </div>
                   );
                 })}
@@ -195,18 +186,20 @@ const Game = () => {
                 <div className="flex justify-center">
                   <button
                     onClick={restartGame}
-                    className="mt-6 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-semibold"
+                    className="mt-6 px-4 py-2 bg-red-500 text-white rounded-lg font-semibold w-40"
                   >
                     Retry
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="text-center">
-                <p className="text-green-600 text-2xl font-bold">Good job!</p>
+              <div className="flex flex-col items-center gap-4 mt-8">
+                <p className="text-3xl font-bold text-green-600">
+                  Good Job!
+                </p>
                 <button
                   onClick={restartGame}
-                  className="mt-6 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-semibold"
+                  className="px-6 py-3 bg-red-500 text-white rounded-lg w-40 text-lg font-semibold hover:bg-red-600 transition"
                 >
                   Retry
                 </button>
