@@ -139,10 +139,10 @@ const Game = () => {
 
           {/* Mode & Script badges */}
           <div className="flex gap-3 mb-6">
-            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold tracking-wide cursor-default">
+            <span className="px-3 py-1 text-blue-800 text-sm font-semibold tracking-wide cursor-default">
               Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
             </span>
-            <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-semibold tracking-wide cursor-default">
+            <span className="px-3 py-1 text-purple-800 text-sm font-semibold tracking-wide cursor-default">
               Script: {script.charAt(0).toUpperCase() + script.slice(1)}
             </span>
           </div>
@@ -194,9 +194,7 @@ const Game = () => {
               </div>
             ) : (
               <div className="flex flex-col items-center gap-4 mt-8">
-                <p className="text-3xl font-bold text-green-600">
-                  Good Job!
-                </p>
+                <p className="text-3xl font-bold text-green-600">Good Job!</p>
                 <button
                   onClick={restartGame}
                   className="mt-6 px-6 py-3 bg-red-500 text-white rounded-lg w-40 text-lg font-semibold hover:bg-red-600 transition"
