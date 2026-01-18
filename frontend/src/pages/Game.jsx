@@ -116,6 +116,23 @@ const Game = () => {
     }
   };
 
+  // Render highlighted line for real-time feedback
+  const renderHighlightedLine = () => {
+    const currentLine = lyrics[currentLineIndex]?.[script] || "";
+    return currentLine.split("").map((char, idx) => {
+      let colorClass = "";
+      if (idx < userInput.length) {
+        colorClass =
+          userInput[idx] === char ? "text-green-500" : "text-red-500";
+      }
+      return (
+        <span key={idx} className={colorClass}>
+          {char}
+        </span>
+      );
+    });
+  };
+
   return (
     <div className="p-6">
       {/* Main content */}
@@ -134,9 +151,8 @@ const Game = () => {
             </p>
           ) : (
             <>
-              <p className="mt-4 text-xl">
-                Current line: {lyrics[currentLineIndex]?.[script]}
-              </p>
+              {/* Highlighted current line */}
+              <p className="mt-4 text-xl">{renderHighlightedLine()}</p>
 
               {/* Typing input */}
               <input
