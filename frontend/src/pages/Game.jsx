@@ -132,8 +132,7 @@ const Game = () => {
     return line.split("").map((char, idx) => {
       let cls = "";
       if (idx < userInput.length) {
-        cls =
-          userInput[idx] === char ? "text-green-500" : "text-red-500";
+        cls = userInput[idx] === char ? "text-green-500" : "text-red-500";
       }
       return (
         <span key={idx} className={cls}>
@@ -170,7 +169,8 @@ const Game = () => {
                 {lyrics.map((line, idx) => {
                   const correct = line[script];
                   const answer = userInputs[idx] || "";
-                  const ok = correct === answer;
+                  const isEllipsis = correct === "...";
+                  const ok = !isEllipsis && correct === answer;
 
                   return (
                     <div
@@ -179,8 +179,8 @@ const Game = () => {
                     >
                       <div>{idx + 1}</div>
                       <div>{correct}</div>
-                      <div>{answer}</div>
-                      <div>{ok ? "✅" : "❌"}</div>
+                      <div>{isEllipsis ? "—" : answer}</div>
+                      <div>{isEllipsis ? "—" : ok ? "✅" : "❌"}</div>
                     </div>
                   );
                 })}
@@ -194,9 +194,7 @@ const Game = () => {
               </div>
             ) : (
               <div className="mt-4 text-center">
-                <p className="text-green-600 text-2xl font-bold">
-                  Good job!
-                </p>
+                <p className="text-green-600 text-2xl font-bold">Good job!</p>
                 <button
                   onClick={restartGame}
                   className="mt-2 px-4 py-2 bg-red-500 text-white rounded"
