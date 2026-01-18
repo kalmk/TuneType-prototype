@@ -131,11 +131,12 @@ const Game = () => {
 
   /* ================= UI ================= */
   return (
-    <div className="p-6 min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="flex flex-col md:flex-row gap-6 w-full max-w-6xl">
-        {/* LEFT PANEL */}
-        <div className="md:w-2/3 flex flex-col items-center bg-gray-100 p-6 rounded-2xl shadow-md">
-          <h1 className="text-2xl font-bold mb-1">{name}</h1>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-6">
+      <div className="w-full max-w-6xl flex flex-col md:flex-row gap-6 bg-white shadow-lg rounded-xl p-6">
+        
+        {/* LEFT PANEL: Lyrics */}
+        <div className="md:w-2/3 bg-gray-100 p-6 rounded-xl shadow-inner flex flex-col items-center">
+          <h1 className="text-2xl font-bold mb-4">{name}</h1>
 
           {/* Mode & Script badges */}
           <div className="flex gap-3 mb-6">
@@ -183,10 +184,10 @@ const Game = () => {
                   );
                 })}
 
-                <div className="flex justify-center">
+                <div className="flex justify-center mt-6">
                   <button
                     onClick={restartGame}
-                    className="mt-6 px-4 py-2 bg-red-500 text-white rounded-lg font-semibold w-40"
+                    className="mt-6 px-6 py-3 bg-red-500 text-white rounded-lg w-40 text-lg font-semibold hover:bg-red-600 transition"
                   >
                     Retry
                   </button>
@@ -205,7 +206,6 @@ const Game = () => {
             )
           ) : (
             <>
-              {/* LYRIC FOCUS AREA */}
               {mode !== "quiz" && (
                 <div className="min-h-[120px] flex items-center justify-center">
                   <p className="text-3xl font-medium tracking-wide text-center leading-relaxed">
@@ -214,7 +214,6 @@ const Game = () => {
                 </div>
               )}
 
-              {/* INPUT */}
               {lyrics[currentLineIndex]?.kana !== "..." && (
                 <input
                   value={userInput}
@@ -229,8 +228,8 @@ const Game = () => {
           )}
         </div>
 
-        {/* RIGHT PANEL */}
-        <div className="md:w-1/3 flex flex-col items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-md">
+        {/* RIGHT PANEL: Controls */}
+        <div className="md:w-1/3 flex flex-col items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-inner">
           <button
             onClick={() => navigate("/songs")}
             className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg w-40 mx-auto font-semibold hover:bg-gray-400 transition"
