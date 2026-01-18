@@ -199,7 +199,7 @@ const Game = () => {
                 </p>
                 <button
                   onClick={restartGame}
-                  className="px-6 py-3 bg-red-500 text-white rounded-lg w-40 text-lg font-semibold hover:bg-red-600 transition"
+                  className="mt-6 px-6 py-3 bg-red-500 text-white rounded-lg w-40 text-lg font-semibold hover:bg-red-600 transition"
                 >
                   Retry
                 </button>
