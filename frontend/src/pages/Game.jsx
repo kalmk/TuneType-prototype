@@ -8,7 +8,7 @@ const Game = () => {
   const navigate = useNavigate();
 
   const mode = searchParams.get("mode") || "normal";
-  const script = searchParams.get("script") || "kana"; // Kana or Kanji
+  const script = searchParams.get("script") || "kana";
 
   const song = songs.find((s) => s.id === songId);
   if (!song) return <div>Song not found!</div>;
@@ -16,19 +16,21 @@ const Game = () => {
   const { name, audioSrc, lyrics } = song;
 
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [userInput, setUserInput] = useState(""); // User typing input
+  const [userInput, setUserInput] = useState("");
   const [speed, setSpeed] = useState(1);
   const [isFinished, setIsFinished] = useState(false);
+  const [userInputs, setUserInputs] = useState([]);
+
   const audioRef = useRef(null);
 
-  // Play the current line
+  /* ================= AUDIO ================= */
+
   const playLine = () => {
     if (!audioRef.current) return;
     const audio = audioRef.current;
     const line = lyrics[currentLineIndex];
     if (!line) return;
 
-    // Remove previous listener if exists
     if (audio._onTimeUpdate) {
       audio.removeEventListener("timeupdate", audio._onTimeUpdate);
     }
@@ -38,7 +40,6 @@ const Game = () => {
         audio.pause();
         audio.removeEventListener("timeupdate", audio._onTimeUpdate);
 
-        // Automatically skip "..." lines
         if (line.kana === "...") {
           skipLine();
         }
@@ -51,125 +52,172 @@ const Game = () => {
     audio.addEventListener("timeupdate", audio._onTimeUpdate);
   };
 
-  // Skip to the next line
+  /* ================= GAME FLOW ================= */
+
   const skipLine = () => {
     if (!audioRef.current) return;
     audioRef.current.pause();
 
     setCurrentLineIndex((prev) => {
-      const nextIndex = prev + 1;
-      if (nextIndex >= lyrics.length) {
+      const next = prev + 1;
+
+      if (mode === "quiz") {
+        setUserInputs((inputs) => {
+          const copy = [...inputs];
+          copy[prev] = userInput;
+          return copy;
+        });
+        setUserInput("");
+      }
+
+      if (next >= lyrics.length) {
         setIsFinished(true);
         return prev;
       }
-      if (isFinished) setIsFinished(false);
-      return nextIndex;
+
+      return next;
     });
   };
 
-  // Previous line
   const previousLine = () => {
     if (!audioRef.current) return;
     audioRef.current.pause();
-
-    setCurrentLineIndex((prev) => {
-      const newIndex = prev - 1 < 0 ? 0 : prev - 1;
-      if (isFinished) setIsFinished(false);
-      return newIndex;
-    });
+    setCurrentLineIndex((prev) => Math.max(0, prev - 1));
   };
 
-  // Restart game
   const restartGame = () => {
     if (!audioRef.current) return;
     audioRef.current.pause();
     setCurrentLineIndex(0);
     setUserInput("");
+    setUserInputs([]);
     setIsFinished(false);
-
-    // Directly play the first line
     playLine();
   };
 
-  // Toggle speed
   const toggleSpeed = () => {
-    if (!audioRef.current) return;
     const newSpeed = speed === 1 ? 0.5 : 1;
     setSpeed(newSpeed);
-    audioRef.current.playbackRate = newSpeed;
-  };
-
-  // Play line whenever currentLineIndex changes
-  useEffect(() => {
-    if (!isFinished) playLine();
-    setUserInput(""); // Clear input on line change
-  }, [currentLineIndex]);
-
-  // Handle Enter key for line progression
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      const currentLine = lyrics[currentLineIndex]?.[script];
-      if (!currentLine) return;
-
-      // Only proceed for non-"..." lines
-      if (currentLine !== "...") {
-        if (userInput === currentLine) {
-          setUserInput("");
-          skipLine();
-        } else {
-          alert("Incorrect! Try again.");
-        }
-      }
+    if (audioRef.current) {
+      audioRef.current.playbackRate = newSpeed;
     }
   };
 
-  // Render highlighted line for real-time feedback
+  useEffect(() => {
+    if (!isFinished) playLine();
+    setUserInput("");
+  }, [currentLineIndex]);
+
+  /* ================= INPUT ================= */
+
+  const handleKeyDown = (e) => {
+    if (e.key !== "Enter") return;
+
+    const correct = lyrics[currentLineIndex]?.[script];
+    if (!correct || correct === "...") return;
+
+    if (mode === "normal") {
+      if (userInput === correct) {
+        skipLine();
+      } else {
+        alert("Incorrect! Try again.");
+      }
+    } else {
+      skipLine();
+    }
+  };
+
   const renderHighlightedLine = () => {
-    const currentLine = lyrics[currentLineIndex]?.[script] || "";
-    return currentLine.split("").map((char, idx) => {
-      let colorClass = "";
+    const line = lyrics[currentLineIndex]?.[script] || "";
+    return line.split("").map((char, idx) => {
+      let cls = "";
       if (idx < userInput.length) {
-        colorClass =
+        cls =
           userInput[idx] === char ? "text-green-500" : "text-red-500";
       }
       return (
-        <span key={idx} className={colorClass}>
+        <span key={idx} className={cls}>
           {char}
         </span>
       );
     });
   };
 
+  /* ================= UI ================= */
+
   return (
     <div className="p-6">
-      {/* Main content */}
       <div className="flex justify-between">
-        {/* Left: song info and lyrics */}
+        {/* LEFT */}
         <div className="w-2/3">
           <h1 className="text-2xl font-bold mb-2">Playing: {name}</h1>
           <h2 className="text-lg mb-4">
-            Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)} | Script:{" "}
-            {script.charAt(0).toUpperCase() + script.slice(1)}
+            Mode: {mode} | Script: {script}
           </h2>
 
           {isFinished ? (
-            <p className="text-green-600 font-bold text-2xl mt-4 text-center">
-              Good job!
-            </p>
+            mode === "quiz" ? (
+              <div className="mt-6">
+                <h2 className="text-2xl font-bold mb-4">Results</h2>
+
+                <div className="grid grid-cols-4 gap-4 font-semibold border-b pb-2 mb-2">
+                  <div>#</div>
+                  <div>Correct</div>
+                  <div>Your Answer</div>
+                  <div>Result</div>
+                </div>
+
+                {lyrics.map((line, idx) => {
+                  const correct = line[script];
+                  const answer = userInputs[idx] || "";
+                  const ok = correct === answer;
+
+                  return (
+                    <div
+                      key={idx}
+                      className="grid grid-cols-4 gap-4 py-1 border-b"
+                    >
+                      <div>{idx + 1}</div>
+                      <div>{correct}</div>
+                      <div>{answer}</div>
+                      <div>{ok ? "✅" : "❌"}</div>
+                    </div>
+                  );
+                })}
+
+                <button
+                  onClick={restartGame}
+                  className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+                >
+                  Retry
+                </button>
+              </div>
+            ) : (
+              <div className="mt-4 text-center">
+                <p className="text-green-600 text-2xl font-bold">
+                  Good job!
+                </p>
+                <button
+                  onClick={restartGame}
+                  className="mt-2 px-4 py-2 bg-red-500 text-white rounded"
+                >
+                  Retry
+                </button>
+              </div>
+            )
           ) : (
             <>
-              {/* Highlighted current line */}
-              <p className="mt-4 text-xl">{renderHighlightedLine()}</p>
+              {mode !== "quiz" && (
+                <p className="mt-4 text-xl">{renderHighlightedLine()}</p>
+              )}
 
-              {/* Typing input only if line is not "..." */}
               {lyrics[currentLineIndex]?.kana !== "..." && (
                 <input
-                  type="text"
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Type the lyrics here..."
                   className="mt-2 p-2 border rounded w-full text-lg"
+                  placeholder="Type the lyrics here..."
                   autoFocus
                 />
               )}
@@ -177,57 +225,48 @@ const Game = () => {
           )}
         </div>
 
-        {/* Right: header + buttons */}
+        {/* RIGHT */}
         <div className="w-1/3 flex flex-col items-center gap-2">
-          {/* Header button stacked on top of other buttons */}
-          <div className="mb-4 w-full flex justify-center">
+          <div className="mb-4">
             <button
               onClick={() => navigate("/songs")}
-              className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
+              className="px-4 py-2 bg-gray-700 text-white rounded"
             >
               Back to Song Selection
             </button>
           </div>
 
-          {/* Buttons */}
-          {isFinished ? (
-            <button
-              onClick={restartGame}
-              className="px-4 py-2 bg-red-500 text-white rounded w-auto"
-            >
-              Retry
-            </button>
-          ) : (
+          {!isFinished && (
             <>
               {currentLineIndex > 0 && (
                 <button
                   onClick={previousLine}
-                  className="px-4 py-2 bg-gray-500 text-white rounded w-auto"
+                  className="px-4 py-2 bg-gray-500 text-white rounded"
                 >
                   Previous Line
                 </button>
               )}
               <button
                 onClick={playLine}
-                className="px-4 py-2 bg-blue-500 text-white rounded w-auto"
+                className="px-4 py-2 bg-blue-500 text-white rounded"
               >
                 Replay Line
               </button>
               <button
                 onClick={skipLine}
-                className="px-4 py-2 bg-green-500 text-white rounded w-auto"
+                className="px-4 py-2 bg-green-500 text-white rounded"
               >
                 Skip Line
               </button>
               <button
                 onClick={restartGame}
-                className="px-4 py-2 bg-red-500 text-white rounded w-auto"
+                className="px-4 py-2 bg-red-500 text-white rounded"
               >
                 Restart Game
               </button>
               <button
                 onClick={toggleSpeed}
-                className="px-4 py-2 bg-purple-500 text-white rounded w-auto"
+                className="px-4 py-2 bg-purple-500 text-white rounded"
               >
                 Speed: {speed}x
               </button>
