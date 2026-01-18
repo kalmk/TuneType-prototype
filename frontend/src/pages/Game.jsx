@@ -86,6 +86,9 @@ const Game = () => {
     setCurrentLineIndex(0);
     setUserInput("");
     setIsFinished(false);
+
+    // Directly play the first line
+    playLine();
   };
 
   // Toggle speed
