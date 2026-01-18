@@ -24,6 +24,7 @@ const Game = () => {
   const audioRef = useRef(null);
 
   /* ================= AUDIO ================= */
+
   const playLine = () => {
     if (!audioRef.current) return;
     const audio = audioRef.current;
@@ -52,6 +53,7 @@ const Game = () => {
   };
 
   /* ================= GAME FLOW ================= */
+
   const skipLine = () => {
     if (!audioRef.current) return;
     audioRef.current.pause();
@@ -96,7 +98,9 @@ const Game = () => {
   const toggleSpeed = () => {
     const newSpeed = speed === 1 ? 0.5 : 1;
     setSpeed(newSpeed);
-    if (audioRef.current) audioRef.current.playbackRate = newSpeed;
+    if (audioRef.current) {
+      audioRef.current.playbackRate = newSpeed;
+    }
   };
 
   useEffect(() => {
@@ -105,6 +109,7 @@ const Game = () => {
   }, [currentLineIndex]);
 
   /* ================= INPUT ================= */
+
   const handleKeyDown = (e) => {
     if (e.key !== "Enter") return;
 
@@ -138,148 +143,143 @@ const Game = () => {
   };
 
   /* ================= UI ================= */
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 p-6">
-      <div className="w-full max-w-6xl bg-white rounded-2xl shadow-xl p-6">
-        <div className="flex flex-col md:flex-row justify-between gap-6">
-          {/* LEFT */}
-          <div className="md:w-2/3 flex flex-col items-center">
-            <h1 className="text-3xl font-bold mb-2">{name}</h1>
-            <h2 className="text-lg text-gray-600 mb-6">
-              Mode: {mode} | Script: {script}
-            </h2>
+    <div className="p-6 min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="flex flex-col md:flex-row gap-6 w-full max-w-6xl">
+        {/* LEFT PANEL */}
+        <div className="md:w-2/3 flex flex-col items-center bg-gray-100 p-6 rounded-2xl shadow-md">
+          <h1 className="text-2xl font-bold mb-1">Playing: {name}</h1>
+          <h2 className="text-lg mb-6 text-gray-600">
+            Mode: {mode} | Script: {script}
+          </h2>
 
-            {isFinished ? (
-              mode === "quiz" ? (
-                <div className="w-full">
-                  <h2 className="text-2xl font-bold mb-4 text-center">
-                    Results
-                  </h2>
+          {isFinished ? (
+            mode === "quiz" ? (
+              <div className="w-full">
+                <h2 className="text-2xl font-bold mb-4 text-center">Results</h2>
 
-                  <div className="grid grid-cols-4 gap-4 font-semibold border-b pb-2 mb-2">
-                    <div>#</div>
-                    <div>Correct</div>
-                    <div>Your Answer</div>
-                    <div>Result</div>
-                  </div>
-
-                  {lyrics.map((line, idx) => {
-                    const correct = line[script];
-                    const answer = userInputs[idx] || "";
-                    const isEllipsis = correct === "...";
-                    const ok = !isEllipsis && correct === answer;
-
-                    return (
-                      <div
-                        key={idx}
-                        className="grid grid-cols-4 gap-4 py-1 border-b"
-                      >
-                        <div>{idx + 1}</div>
-                        <div>{correct}</div>
-                        <div>{isEllipsis ? "—" : answer}</div>
-                        <div>{isEllipsis ? "—" : ok ? "✅" : "❌"}</div>
-                      </div>
-                    );
-                  })}
-
-                  <div className="flex justify-center mt-4">
-                    <button
-                      onClick={restartGame}
-                      className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-                    >
-                      Retry
-                    </button>
-                  </div>
+                <div className="grid grid-cols-4 gap-4 font-semibold border-b pb-2 mb-2">
+                  <div>#</div>
+                  <div>Correct</div>
+                  <div>Your Answer</div>
+                  <div>Result</div>
                 </div>
-              ) : (
-                <div className="text-center">
-                  <p className="text-green-600 text-2xl font-bold mb-2">
-                    Good job!
-                  </p>
+
+                {lyrics.map((line, idx) => {
+                  const correct = line[script];
+                  const answer = userInputs[idx] || "";
+                  const isEllipsis = correct === "...";
+                  const ok = !isEllipsis && correct === answer;
+
+                  return (
+                    <div
+                      key={idx}
+                      className="grid grid-cols-4 gap-4 py-1 border-b"
+                    >
+                      <div>{idx + 1}</div>
+                      <div>{correct}</div>
+                      <div>{isEllipsis ? "—" : answer}</div>
+                      <div>{isEllipsis ? "—" : ok ? "✅" : "❌"}</div>
+                    </div>
+                  );
+                })}
+
+                <div className="flex justify-center">
                   <button
                     onClick={restartGame}
-                    className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                    className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
                   >
                     Retry
                   </button>
                 </div>
-              )
+              </div>
             ) : (
-              <>
-                {/* LYRIC */}
-                {mode !== "quiz" && (
-                  <div className="min-h-[120px] flex items-center justify-center">
-                    <p className="text-3xl font-medium tracking-wide text-center leading-relaxed">
-                      {renderHighlightedLine()}
-                    </p>
-                  </div>
-                )}
-
-                {/* INPUT */}
-                {lyrics[currentLineIndex]?.kana !== "..." && (
-                  <input
-                    value={userInput}
-                    onChange={(e) => setUserInput(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    className="mt-4 p-3 border rounded-xl w-3/4 text-xl text-center shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Type the lyrics here..."
-                    autoFocus
-                  />
-                )}
-              </>
-            )}
-          </div>
-
-          {/* RIGHT */}
-          <div className="md:w-1/3 flex flex-col items-center gap-3">
-            <button
-              onClick={() => navigate("/songs")}
-              className="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition"
-            >
-              Back to Song Selection
-            </button>
-
-            {!isFinished && (
-              <>
-                {currentLineIndex > 0 && (
-                  <button
-                    onClick={previousLine}
-                    className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition"
-                  >
-                    Previous Line
-                  </button>
-                )}
-                <button
-                  onClick={playLine}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-                >
-                  Replay Line
-                </button>
-                <button
-                  onClick={skipLine}
-                  className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-                >
-                  Skip Line
-                </button>
+              <div className="text-center">
+                <p className="text-green-600 text-2xl font-bold">Good job!</p>
                 <button
                   onClick={restartGame}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                  className="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
                 >
-                  Restart Game
+                  Retry
                 </button>
-                <button
-                  onClick={toggleSpeed}
-                  className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition"
-                >
-                  Speed: {speed}x
-                </button>
-              </>
-            )}
-          </div>
+              </div>
+            )
+          ) : (
+            <>
+              {/* LYRIC FOCUS AREA */}
+              {mode !== "quiz" && (
+                <div className="min-h-[120px] flex items-center justify-center">
+                  <p className="text-3xl font-medium tracking-wide text-center leading-relaxed">
+                    {renderHighlightedLine()}
+                  </p>
+                </div>
+              )}
+
+              {/* INPUT */}
+              {lyrics[currentLineIndex]?.kana !== "..." && (
+                <input
+                  value={userInput}
+                  onChange={(e) => setUserInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="mt-4 p-3 border rounded-lg w-3/4 text-xl text-center shadow-sm"
+                  placeholder="Type the lyrics here..."
+                  autoFocus
+                />
+              )}
+            </>
+          )}
         </div>
 
-        <audio ref={audioRef} src={audioSrc} />
+        {/* RIGHT PANEL (smaller buttons) */}
+        <div className="md:w-1/3 flex flex-col items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-md">
+          <button
+            onClick={() => navigate("/songs")}
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition w-40 mx-auto font-semibold"
+          >
+            Back to Song Selection
+          </button>
+
+          {!isFinished && (
+            <>
+              {currentLineIndex > 0 && (
+                <button
+                  onClick={previousLine}
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition w-40 mx-auto font-semibold"
+                >
+                  Previous Line
+                </button>
+              )}
+              <button
+                onClick={playLine}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition w-40 mx-auto font-semibold"
+              >
+                Replay Line
+              </button>
+              <button
+                onClick={skipLine}
+                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition w-40 mx-auto font-semibold"
+              >
+                Skip Line
+              </button>
+              <button
+                onClick={restartGame}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition w-40 mx-auto font-semibold"
+              >
+                Restart Game
+              </button>
+              <button
+                onClick={toggleSpeed}
+                className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition w-40 mx-auto font-semibold"
+              >
+                Speed: {speed}x
+              </button>
+            </>
+          )}
+        </div>
       </div>
+
+      <audio ref={audioRef} src={audioSrc} />
     </div>
   );
 };
