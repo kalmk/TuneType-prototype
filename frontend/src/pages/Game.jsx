@@ -148,16 +148,18 @@ const Game = () => {
     <div className="p-6">
       <div className="flex justify-between">
         {/* LEFT */}
-        <div className="w-2/3">
-          <h1 className="text-2xl font-bold mb-2">Playing: {name}</h1>
-          <h2 className="text-lg mb-4">
+        <div className="w-2/3 flex flex-col items-center">
+          <h1 className="text-2xl font-bold mb-1">Playing: {name}</h1>
+          <h2 className="text-lg mb-6 text-gray-600">
             Mode: {mode} | Script: {script}
           </h2>
 
           {isFinished ? (
             mode === "quiz" ? (
-              <div className="mt-6">
-                <h2 className="text-2xl font-bold mb-4">Results</h2>
+              <div className="w-full">
+                <h2 className="text-2xl font-bold mb-4 text-center">
+                  Results
+                </h2>
 
                 <div className="grid grid-cols-4 gap-4 font-semibold border-b pb-2 mb-2">
                   <div>#</div>
@@ -185,16 +187,20 @@ const Game = () => {
                   );
                 })}
 
-                <button
-                  onClick={restartGame}
-                  className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-                >
-                  Retry
-                </button>
+                <div className="flex justify-center">
+                  <button
+                    onClick={restartGame}
+                    className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+                  >
+                    Retry
+                  </button>
+                </div>
               </div>
             ) : (
-              <div className="mt-4 text-center">
-                <p className="text-green-600 text-2xl font-bold">Good job!</p>
+              <div className="text-center">
+                <p className="text-green-600 text-2xl font-bold">
+                  Good job!
+                </p>
                 <button
                   onClick={restartGame}
                   className="mt-2 px-4 py-2 bg-red-500 text-white rounded"
@@ -205,16 +211,22 @@ const Game = () => {
             )
           ) : (
             <>
+              {/* LYRIC FOCUS AREA */}
               {mode !== "quiz" && (
-                <p className="mt-4 text-xl">{renderHighlightedLine()}</p>
+                <div className="min-h-[120px] flex items-center justify-center">
+                  <p className="text-3xl font-medium tracking-wide text-center leading-relaxed">
+                    {renderHighlightedLine()}
+                  </p>
+                </div>
               )}
 
+              {/* INPUT */}
               {lyrics[currentLineIndex]?.kana !== "..." && (
                 <input
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  className="mt-2 p-2 border rounded w-full text-lg"
+                  className="mt-4 p-3 border rounded w-3/4 text-xl text-center"
                   placeholder="Type the lyrics here..."
                   autoFocus
                 />
