@@ -2,12 +2,16 @@ import { Routes, Route } from "react-router-dom";
 import SongSelect from "./pages/SongSelect";
 import Game from "./pages/Game";
 import Welcome from "./pages/Welcome";
+import HomePage from "./pages/HomePage";
+import Profile from "./pages/Profile";
 
 export default function App() {
   return (
     <Routes>
       {/* Implement all path to the pages accordingly */}
       <Route path="/welcome" element={<Welcome />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/profile" element={<Profile />} />
 
       {/* Gameplay */}
       <Route path="/songs" element={<SongSelect />} />
