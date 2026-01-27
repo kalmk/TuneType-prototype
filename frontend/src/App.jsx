@@ -9,8 +9,8 @@ export default function App() {
   return (
     <Routes>
       {/* Implement all path to the pages accordingly */}
-      <Route path="/welcome" element={<Welcome />} />
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<Welcome />} />
+      <Route path="/homepage" element={<HomePage />} />
       <Route path="/profile" element={<Profile />} />
 
       {/* Gameplay */}
