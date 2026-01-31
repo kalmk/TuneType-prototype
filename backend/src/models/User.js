@@ -1,1 +1,1 @@
-// /backend/src/models/User.js
+// backend/src/models/User.js

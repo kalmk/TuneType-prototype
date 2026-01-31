@@ -1,2 +1,2 @@
-// /backend/src/index.js
+// backend/src/index.js
 console.log("Hello world")

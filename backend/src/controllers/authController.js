@@ -1,1 +1,1 @@
-// /backend/src/controllers/authController.js
+// backend/src/controllers/authController.js

@@ -1,1 +1,1 @@
-// /backend/src/routes/authRoutes.js
+// backend/src/routes/authRoutes.js

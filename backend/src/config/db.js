@@ -1,1 +1,1 @@
-// /backend/src/config/db.js
+// backend/src/config/db.js

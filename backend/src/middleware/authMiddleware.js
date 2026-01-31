@@ -1,1 +1,1 @@
-// /backend/src/middleware/authMiddleware.js
+// backend/src/middleware/authMiddleware.js

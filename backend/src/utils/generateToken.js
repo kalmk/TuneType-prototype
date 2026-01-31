@@ -1,1 +1,1 @@
-// /backend/src/utils/generateToken.js
+// backend/src/utils/generateToken.js
