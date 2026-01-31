@@ -13,16 +13,20 @@ const SongSelect = () => {
   const handleStart = () => {
     if (selectedSong) {
       navigate(
-        `/play/${selectedSong}?mode=${selectedMode}&script=${selectedScript}`,
+        `/play/${selectedSong}?mode=${selectedMode}&script=${selectedScript}`
       );
     }
+  };
+
+  const handleBackHome = () => {
+    navigate("/homepage"); // navigate to HomePage
   };
 
   return (
     <div
       className="flex flex-col items-center justify-center min-h-screen p-6"
       style={{
-        backgroundColor: "#fef9e7", // light sunflower yellow background
+        backgroundColor: "#fef9e7",
         backgroundImage: `radial-gradient(circle at 10px 10px, #f6d365 5%, transparent 6%),
                           radial-gradient(circle at 30px 30px, #f6d365 5%, transparent 6%)`,
         backgroundSize: "40px 40px",
@@ -92,7 +96,7 @@ const SongSelect = () => {
           </div>
 
           {/* Start button */}
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center gap-4 mt-4">
             <button
               onClick={handleStart}
               disabled={!selectedSong}
@@ -103,6 +107,14 @@ const SongSelect = () => {
               }`}
             >
               Start Game
+            </button>
+
+            {/* Back to Home button */}
+            <button
+              onClick={handleBackHome}
+              className="px-6 py-3 rounded-lg font-semibold bg-blue-400 text-white hover:bg-blue-500 transition-all duration-200"
+            >
+              Back to Home
             </button>
           </div>
         </div>
