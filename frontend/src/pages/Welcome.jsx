@@ -23,7 +23,7 @@ const Welcome = () => {
             alt="TuneType Logo"
             className="w-64 h-64 mx-auto"
           />
-          <h1 className="text-3xl font-bold">T U N E T Y P E</h1>
+          <h1 className="text-2xl font-bold">TUNETYPE</h1>
           <h2 className="text-2xl">LET'S GET STARTED</h2>
         </div>
       </div>

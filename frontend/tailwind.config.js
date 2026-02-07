@@ -5,11 +5,7 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Poppins', 'Manrope', 'Quicksand', 'Roboto', 'SN Pro', 'ui-sans-serif', 'system-ui'],
-      },
-    },
+    extend: {},
   },
   plugins: [],
 }
