@@ -23,6 +23,8 @@ const Game = () => {
 
   const audioRef = useRef(null);
 
+  const [isComposing, setIsComposing] = useState(false);
+
   /* ================= AUDIO ================= */
   const playLine = () => {
     if (!audioRef.current) return;
@@ -101,6 +103,12 @@ const Game = () => {
     if (!isFinished) playLine();
     setUserInput("");
   }, [currentLineIndex]);
+
+  const normalizeJapaneseInput = (str) => {
+    return str
+      .replace(/\u3000/g, " ") // full-width space → normal space
+      .normalize("NFKC"); // normalize other full-width chars too
+  };
 
   /* ================= INPUT ================= */
   const handleKeyDown = (e) => {
@@ -224,7 +232,18 @@ const Game = () => {
               {lyrics[currentLineIndex]?.kana !== "..." && (
                 <input
                   value={userInput}
-                  onChange={(e) => setUserInput(e.target.value)}
+                  onCompositionStart={() => setIsComposing(true)}
+                  onCompositionEnd={(e) => {
+                    setIsComposing(false);
+                    setUserInput(normalizeJapaneseInput(e.target.value));
+                  }}
+                  onChange={(e) => {
+                    if (!isComposing) {
+                      setUserInput(normalizeJapaneseInput(e.target.value));
+                    } else {
+                      setUserInput(e.target.value); // DO NOT TOUCH during IME
+                    }
+                  }}
                   onKeyDown={handleKeyDown}
                   className="mt-4 p-3 border rounded-lg w-3/4 text-xl text-center shadow-sm"
                   placeholder="Type the lyrics here..."
