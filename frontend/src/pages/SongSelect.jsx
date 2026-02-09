@@ -4,7 +4,14 @@ import { useNavigate } from "react-router-dom";
 const SongSelect = () => {
   const navigate = useNavigate();
 
-  const songs = [{ id: "rabbit", name: "うさぎ" }];
+  // List of songs from songs.js
+  const songs = [
+    { id: "rabbit", name: "うさぎ" },
+    { id: "katatataki", name: "肩たたき"},
+    { id: "moon", name: "つき"},
+    { id: "doll", name: "人形"},
+
+  ];
 
   const [selectedSong, setSelectedSong] = useState(null);
   const [selectedMode, setSelectedMode] = useState("normal");
