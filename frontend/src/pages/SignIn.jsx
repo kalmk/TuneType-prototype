@@ -11,7 +11,7 @@ const SignIn = () => {
   const handleLogin = (e) => {
     e.preventDefault()
 
-    // Just an example! Will replace in production...!
+    // Just an example! Will replace in production with actual API call
     if ((emailOrUsername === 'user@example.com' || emailOrUsername === 'demoUser') && password === '12345') {
       toast.success('Welcome back!')
       // small delay so the toast shows before navigation
