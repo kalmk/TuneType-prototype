@@ -11,7 +11,7 @@ const SignIn = () => {
   const handleLogin = (e) => {
     e.preventDefault()
 
-    // Example local check — replace with backend call in production
+    // Just an example! Will replace in production...!
     if ((emailOrUsername === 'user@example.com' || emailOrUsername === 'demoUser') && password === '12345') {
       toast.success('Welcome back!')
       // small delay so the toast shows before navigation
@@ -22,7 +22,6 @@ const SignIn = () => {
   }
 
   return (
-
     <div 
       className="min-h-screen flex"
       style={{
@@ -56,7 +55,6 @@ const SignIn = () => {
       </div>
       <ToastContainer position="top-center" />
     </div>
-
   )
 }
 

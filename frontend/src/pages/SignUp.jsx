@@ -8,7 +8,6 @@ const SignUp = () => {
 
   const handleLogin = (e) => {
     e.preventDefault()
-    // TODO: Add sign up logic here
     navigate('/homepage')
   }
 
