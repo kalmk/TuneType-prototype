@@ -1,7 +1,4 @@
 import dotenv from 'dotenv';
-import { connectDB } from './config/db';
-// backend/src/index.js
-
 import express from "express";
 import { connectDB } from "./config/db.js";
 
