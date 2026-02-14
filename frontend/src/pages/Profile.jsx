@@ -22,7 +22,7 @@ const Profile = () => {
     '/assets/sad.jpeg',
     '/assets/cute.jpeg',
     '/assets/happy.jpeg',
-    '/assets/blush.jpeg',
+    '/assets/blushing.jpeg',
     '/assets/smile.jpeg'
   ];
 
