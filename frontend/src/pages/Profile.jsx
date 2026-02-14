@@ -11,7 +11,6 @@ const Profile = () => {
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [favoriteSongs, setFavoriteSongs] = useState([]);
   
-  // Load saved profile picture from localStorage, or use default
   const [selectedPic, setSelectedPic] = useState(() => {
     const saved = localStorage.getItem('profilePicture');
     return saved || '/assets/C:.jpeg';
@@ -28,7 +27,6 @@ const Profile = () => {
   ];
 
   const handlePicSelect = (pic) => {
-    // TODO: Re-enable this check when backend is ready
     // if (isLoggedIn) {
       setSelectedPic(pic);
       localStorage.setItem('profilePicture', pic);
@@ -64,7 +62,7 @@ const Profile = () => {
         </button>
       </header>
 
-      {/* TODO: re-add guest message check when backend is ready */}
+      {/* re-add guest message check when backend is ready */}
 
       {/* profile pic + username + bio */}
       <div className="flex items-start gap-4 mt-16 mb-8">
