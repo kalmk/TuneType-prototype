@@ -10,6 +10,29 @@ const Profile = () => {
   const [bio, setBio] = useState('');
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [favoriteSongs, setFavoriteSongs] = useState([]);
+  
+  const [selectedPic, setSelectedPic] = useState(() => {
+    const saved = localStorage.getItem('profilePicture');
+    return saved || '/assets/C:.jpeg';
+  });
+  const [showPicSelecter, setPicSelecter] = useState(false);
+
+  const profilePicOptions = [
+    '/assets/:-, recropped.jpeg',
+    '/assets/:(.jpeg',
+    '/assets/:3.jpeg',
+    '/assets/:D.jpeg',
+    '/assets/blush C:.jpeg',
+    '/assets/C:.jpeg'
+  ];
+
+  const handlePicSelect = (pic) => {
+    // if (isLoggedIn) {
+      setSelectedPic(pic);
+      localStorage.setItem('profilePicture', pic);
+      setPicSelecter(false);
+    // }
+  };
 
   const toggleFavorite = (song) => {
     setFavoriteSongs((prev) =>
@@ -39,13 +62,35 @@ const Profile = () => {
         </button>
       </header>
 
-      {/* TODO: re-add guest message check when backend is ready */}
+      {/* re-add guest message check when backend is ready */}
 
       {/* profile pic + username + bio */}
       <div className="flex items-start gap-4 mt-16 mb-8">
-        {/* profile pic placeholder */}
-        <div className="w-32 h-32 rounded-full border-4 border-black bg-gray-200 flex items-center justify-center cursor-pointer hover:bg-gray-300 transition-colors shadow-lg flex-shrink-0">
-          <span className="text-gray-500 text-sm font-bold text-center px-2">PROFILE<br/>PICTURE</span>
+        {/* profile pic with selector */}
+        <div className="relative">
+          <div 
+            onClick={() => setPicSelecter(!showPicSelecter)}
+            className="w-32 h-32 rounded-full border-4 border-black bg-white flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors shadow-lg overflow-hidden"
+          >
+            <img src={selectedPic} alt="Profile" className="w-full h-full object-cover" />
+          </div>
+          
+          {/* picture picker dropdown */}
+          {showPicSelecter && (
+            <div className="absolute top-full mt-2 left-0 border-4 border-black rounded-2xl bg-white p-4 shadow-lg z-50 flex gap-3">
+              {profilePicOptions.map((pic, index) => (
+                <div
+                  key={index}
+                  onClick={() => handlePicSelect(pic)}
+                  className={`w-16 h-16 flex-shrink-0 flex items-center justify-center cursor-pointer rounded-xl hover:bg-gray-200 transition-colors overflow-hidden ${
+                    selectedPic === pic ? 'bg-green-200 border-4 border-black' : 'border-4 border-gray-300'
+                  }`}
+                >
+                  <img src={pic} alt="Avatar option" className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* username + bio */}
@@ -110,24 +155,6 @@ const Profile = () => {
           )}
         </div>
       </div>
-
-      {/* Guest message - commented out for now, re-add when backend is ready */}
-      {/*
-      {isLoggedIn ? null : (
-        <div className="flex flex-col items-center justify-center w-full h-full mt-40">
-          <div className="border-4 border-black rounded-2xl bg-white p-10 shadow-lg text-center max-w-sm">
-            <h1 className="text-2xl font-bold mb-3">Guest User</h1>
-            <p className="text-gray-500 mb-6">Please log in or sign up to access your profile.</p>
-            <button
-              onClick={() => navigate('/')}
-              className="bg-gray-200 border-4 border-black px-8 py-3 rounded-xl font-bold hover:bg-gray-300 shadow-lg"
-            >
-              SIGN UP
-            </button>
-          </div>
-        </div>
-      )}
-      */}
     </div>
   )
 }
