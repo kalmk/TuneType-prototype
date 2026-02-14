@@ -18,12 +18,12 @@ const Profile = () => {
   const [showPicSelecter, setPicSelecter] = useState(false);
 
   const profilePicOptions = [
-    '/assets/:-, recropped.jpeg',
-    '/assets/:(.jpeg',
-    '/assets/:3.jpeg',
-    '/assets/:D.jpeg',
-    '/assets/blush C:.jpeg',
-    '/assets/C:.jpeg'
+    '/assets/neutral.jpeg',
+    '/assets/sad.jpeg',
+    '/assets/cute.jpeg',
+    '/assets/happy.jpeg',
+    '/assets/blush.jpeg',
+    '/assets/smile.jpeg'
   ];
 
   const handlePicSelect = (pic) => {
