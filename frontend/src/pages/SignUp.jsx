@@ -1,19 +1,41 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../lib/axios";
+import { toast, ToastContainer } from "react-toastify";
 
 const SignUp = () => {
-  const navigate = useNavigate()
-  const [emailOrUsername, setEmailOrUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault()
-    // TODO: Add sign up logic here
-    navigate('/homepage')
-  }
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await api.post("/auth/signup", {
+        userName,
+        email,
+        password,
+      });
+
+      console.log("Signup success:", data);
+      toast.success("Welcome to TuneType!", {
+        autoClose: 1500,
+        onClose: () => navigate("/homepage"),
+      });
+    } catch (error) {
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong";
+      toast.error(message);
+    }
+  };
 
   return (
-    <div 
+    <div
       className="min-h-screen flex"
       style={{
         backgroundColor: "#fef9e7",
@@ -23,45 +45,65 @@ const SignUp = () => {
       }}
     >
       <div className="w-full flex items-center justify-center p-8">
-        <form onSubmit={handleLogin} className="border-4 border-black rounded-3xl p-6 bg-white w-full max-w-md">
+        <form
+          onSubmit={handleLogin}
+          className="border-4 border-black rounded-3xl p-6 bg-white w-full max-w-md"
+        >
           <h2 className="text-xl font-bold mb-4">SIGN UP</h2>
-          <input 
-            type="text" 
-            placeholder="Username" 
-            className="w-full border-2 border-black p-2 mb-4 rounded" 
-            value={emailOrUsername}
-            onChange={(e) => setEmailOrUsername(e.target.value)}
+
+          <input
+            type="text"
+            placeholder="Username"
+            className="w-full border-2 border-black p-2 mb-4 rounded"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
           />
-          <input 
-            type="text" 
-            placeholder="Email" 
-            className="w-full border-2 border-black p-2 mb-4 rounded" 
-            value={emailOrUsername}
-            onChange={(e) => setEmailOrUsername(e.target.value)}
+
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full border-2 border-black p-2 mb-4 rounded"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
-          <input 
-            type="password" 
-            placeholder="Password" 
-            className="w-full border-2 border-black p-2 mb-4 rounded" 
+
+          <input
+            type="password"
+            placeholder="Password"
+            className="w-full border-2 border-black p-2 mb-4 rounded"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="submit" className="w-full bg-gray-200 border-4 border-black px-8 py-2 rounded-xl font-bold hover:bg-gray-300 mb-4">
+
+          <button
+            type="submit"
+            className="w-full bg-gray-200 border-4 border-black px-8 py-2 rounded-xl font-bold hover:bg-gray-300 mb-4"
+          >
             SIGN UP
           </button>
-          <div className="flex justify-end">
-            <button 
+
+          <div className="flex flex-col items-end gap-2">
+            <button
               type="button"
-              onClick={() => navigate('/signin')}
-              className="flex items-center gap-2 text-sm hover:font-bold transition"
+              onClick={() => navigate("/signin")}
+              className="text-sm hover:font-bold transition"
             >
-              Already have an account? <span>→</span>
+              Already have an account? →
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="text-sm hover:font-bold transition"
+            >
+              ← Back to Welcome
             </button>
           </div>
         </form>
       </div>
-      </div>
-  )
-}
+      <ToastContainer position="top-center" />
+    </div>
+  );
+};
 
-export default SignUp
+export default SignUp;
