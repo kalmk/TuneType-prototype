@@ -1,5 +1,4 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { friends } from '../data/friends';
 import { songs } from '../data/songs';
 import { useState } from 'react';
 
