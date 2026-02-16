@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../lib/axios";
 import { toast, ToastContainer } from "react-toastify";
+import useUserStore from "../store/userStore";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -9,6 +10,8 @@ const SignUp = () => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const setUser = useUserStore((state) => state.setUser);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -20,6 +23,7 @@ const SignUp = () => {
         password,
       });
 
+      setUser(data);
       console.log("Signup success:", data);
       toast.success("Welcome to TuneType!", {
         autoClose: 1500,

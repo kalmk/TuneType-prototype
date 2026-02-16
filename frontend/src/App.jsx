@@ -33,7 +33,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={user ? <HomePage /> : <Welcome />} />
       <Route path="/homepage" element={<HomePage />} />
-      <Route path="/profile" element={<Profile />} />
+      <Route path="/profile" element={user ? <Profile /> : <SignIn />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/songs" element={<SongSelect />} />
