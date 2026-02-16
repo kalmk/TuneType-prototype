@@ -3,7 +3,7 @@ export const songs = [
   {
     id: "rabbit",
     name: "うさぎ",
-    audioSrc: "/assets/Rabbit_xf.mp3",
+    audioSrc: "/assets/songs/Rabbit_xf.mp3",
     lyrics: [
       { kana: "...", kanji: "...", start: 0, end: 8.5 },
       { kana: "うさぎ", kanji: "兎", start: 8.5, end: 10.2 },
@@ -20,7 +20,7 @@ export const songs = [
   {
     id: "katatataki",
     name: "肩たたき",
-    audioSrc: "/assets/katatataki_xf.mp3",
+    audioSrc: "/assets/songs/katatataki_xf.mp3",
     lyrics: [
       { kana: "...", kanji: "...", start: 0, end: 3.5 },
       { kana: "かあさん おかたをたたきましょう", kanji: "母さん お肩をたたきましょう", start: 3.5, end: 7.5 },
@@ -40,7 +40,7 @@ export const songs = [
   {
     id: "moon",
     name: "つき",
-    audioSrc: "/assets/moon_xf.mp3",
+    audioSrc: "/assets/songs/moon_xf.mp3",
     lyrics: [
       // work in progress
       { kana: "...", kanji: "...", start: 0, end: 8.5 },
@@ -55,7 +55,7 @@ export const songs = [
   {
     id: "doll",
     name: "人形",
-    audioSrc: "/assets/Doll_xf.mp3",
+    audioSrc: "/assets/songs/Doll_xf.mp3",
     lyrics: [
       // work in progress
       { kana: "...", kanji: "...", start: 0, end: 8.5 },
