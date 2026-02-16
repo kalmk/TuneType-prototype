@@ -3,6 +3,7 @@
 import express from "express";
 import { signup, login, logout } from "../controllers/authController.js";
 import { getMe } from "../controllers/authController.js";
+import { getAllUsers } from "../controllers/userController.js";
 
 const router = express.Router();
 

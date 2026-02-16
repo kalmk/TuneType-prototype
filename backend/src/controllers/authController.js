@@ -1,6 +1,5 @@
 // backend/src/controllers/authController.js
 
-import express from "express";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
@@ -106,3 +105,4 @@ export const getMe = async (req, res) => {
     res.status(401).json({ message: "Not authorized" });
   }
 };
+
