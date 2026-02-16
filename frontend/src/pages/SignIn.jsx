@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import api from "../lib/axios";
+import useUserStore from "../store/userStore";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const setUser = useUserStore((state) => state.setUser);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     if (!email || !password) {
       toast.error("All fields are required");
       return;
@@ -19,12 +20,13 @@ const SignIn = () => {
     try {
       const { data } = await api.post("/auth/login", { email, password });
 
+      // store user in zustand
+      setUser(data);
+
       toast.success("Welcome back!", {
         autoClose: 1500,
         onClose: () => navigate("/homepage"),
       });
-
-      console.log("Login success:", data);
     } catch (error) {
       const message =
         error.response?.data?.message ||

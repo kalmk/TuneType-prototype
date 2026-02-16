@@ -4,6 +4,7 @@ import express from "express";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res) => {
   const { userName, email, password } = req.body;
@@ -87,5 +88,21 @@ export const logout = async (req, res) => {
   } catch (error) {
     console.log("Error in logout controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getMe = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    if (!token) return res.status(401).json({ message: "Not authorized" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.userId).select("-password");
+    if (!user) return res.status(401).json({ message: "User not found" });
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(401).json({ message: "Not authorized" });
   }
 };
