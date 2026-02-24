@@ -1,5 +1,4 @@
 // backend/src/models/userModel.js
-
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
@@ -20,7 +19,15 @@ const userSchema = new mongoose.Schema(
     },
     profilePic: {
       type: String,
+      default: "neutral.jpeg", // default profile picture
+    },
+    bio: {
+      type: String,
       default: "",
+    },
+    favoriteSongs: {
+      type: [String], // store song IDs
+      default: [],
     },
   },
   { timestamps: true },

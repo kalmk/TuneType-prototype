@@ -1,3 +1,5 @@
+// frontend/src/pages/Profile.jsx
+import api from "../lib/axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../store/userStore";
@@ -21,6 +23,22 @@ const Profile = () => {
     user?.favoriteSongs || [],
   );
   const [showPicSelector, setShowPicSelector] = useState(false);
+
+  // Save profile changes
+  const saveProfile = async () => {
+    try {
+      const { data } = await api.put("/users/update", {
+        profilePic: user.profilePic,
+        bio,
+        favoriteSongs: favoriteSongIds,
+      });
+      setUser(data); // update Zustand store with latest user info
+      alert("Profile updated!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save profile.");
+    }
+  };
 
   if (!user) {
     return (
@@ -137,6 +155,13 @@ const Profile = () => {
           ))}
         </div>
       </div>
+
+      <button
+        className="mt-4 px-6 py-2 bg-green-300 border-2 border-black rounded-lg font-bold hover:bg-green-400 transition"
+        onClick={saveProfile}
+      >
+        Save Profile
+      </button>
     </div>
   );
 };
