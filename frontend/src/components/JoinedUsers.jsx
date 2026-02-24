@@ -34,8 +34,8 @@ export default function JoinedUsers() {
         {users.map((user) => (
           <li
             key={user._id}
-            className="cursor-pointer hover:text-blue-600"
             onClick={() => openUserProfile(user._id)}
+            className="cursor-pointer px-4 py-2 rounded-md transition hover:bg-gray-100 hover:text-blue-600"
           >
             {user.userName}
           </li>

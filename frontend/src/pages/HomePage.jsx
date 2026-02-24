@@ -183,7 +183,7 @@ const HomePage = () => {
 
         {/* Friends / Users List */}
         <div className="border-4 border-black rounded-3xl p-6 bg-white">
-          <h2 className="text-xl font-bold mb-4">FRIENDS ONLINE</h2>
+          <h2 className="text-xl font-bold mb-4">FRIENDS JOINED</h2>
           <div className="max-h-96 overflow-y-auto">
             {user ? (
               <JoinedUsers />
