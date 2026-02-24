@@ -80,7 +80,7 @@ const SignIn = () => {
             onClick={() => navigate("/signup")}
             className="w-full mt-4 text-sm hover:font-bold transition"
           >
-            Don’t have an account? <span>→</span>
+            Don't have an account?
           </button>
         </form>
       </div>

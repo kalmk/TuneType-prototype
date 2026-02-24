@@ -92,7 +92,7 @@ const SignUp = () => {
               onClick={() => navigate("/signin")}
               className="text-sm hover:font-bold transition"
             >
-              Already have an account? →
+              Already have an account?
             </button>
 
             <button
@@ -100,7 +100,7 @@ const SignUp = () => {
               onClick={() => navigate("/")}
               className="text-sm hover:font-bold transition"
             >
-              ← Back to Welcome
+              Back to Welcome
             </button>
           </div>
         </form>

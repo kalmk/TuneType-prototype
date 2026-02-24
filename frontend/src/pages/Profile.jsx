@@ -99,7 +99,7 @@ const Profile = () => {
         onClick={() => navigate("/homepage")}
         className="self-start mb-4 px-4 py-2 bg-white border-2 border-black rounded-lg font-bold hover:bg-gray-200 transition"
       >
-        ← Back to Homepage
+        Back to Homepage
       </button>
 
       {/* Profile picture */}
