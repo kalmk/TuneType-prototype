@@ -27,6 +27,9 @@ const Game = () => {
 
   const [lastAnswerCorrect, setLastAnswerCorrect] = useState(null); //states to add gifs
 
+  const tryAgainMessages = ["Uh-oh!", "Try again!", "Again!", "もう一度！"];
+  const [tryAgainIndex, setTryAgainIndex] = useState(0);
+
   /* ================= AUDIO ================= */
   const playLine = () => {
     if (!audioRef.current) return;
@@ -59,6 +62,7 @@ const Game = () => {
     audioRef.current.pause();
 
     setLastAnswerCorrect(null); // reset cat
+    setTryAgainIndex(0);
 
     setCurrentLineIndex((prev) => {
       const next = prev + 1;
@@ -86,12 +90,14 @@ const Game = () => {
     audioRef.current.pause();
 
     setLastAnswerCorrect(null); // reset cat
+    setTryAgainIndex(0);
 
     setCurrentLineIndex((prev) => Math.max(0, prev - 1));
   };
 
   const replayLine = () => {
     setLastAnswerCorrect(null);
+    setTryAgainIndex(0);
     playLine();
   };
 
@@ -104,6 +110,7 @@ const Game = () => {
     setIsFinished(false);
     playLine();
     setLastAnswerCorrect(null);
+    setTryAgainIndex(0);
   };
 
   const toggleSpeed = () => {
@@ -135,6 +142,7 @@ const Game = () => {
         skipLine();
       } else {
         setLastAnswerCorrect(false);
+        setTryAgainIndex((prev) => (prev + 1) % tryAgainMessages.length);
       }
     } else {
       skipLine();
@@ -327,7 +335,9 @@ const Game = () => {
           style={{ left: lastAnswerCorrect === false ? "-0px" : "-140px" }}
         >
           <p className="text-xl font-semibold text-gray-600 mb-1 bg-white px-5 py-1 rounded-full shadow">
-            {lastAnswerCorrect === false ? "Try again!" : "You got this!"}
+            {lastAnswerCorrect === false
+              ? tryAgainMessages[tryAgainIndex]
+              : "You got this!"}
           </p>
           <img
             src={
