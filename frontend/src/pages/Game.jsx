@@ -58,6 +58,8 @@ const Game = () => {
     if (!audioRef.current) return;
     audioRef.current.pause();
 
+    setLastAnswerCorrect(null); // reset cat
+
     setCurrentLineIndex((prev) => {
       const next = prev + 1;
 
@@ -82,7 +84,15 @@ const Game = () => {
   const previousLine = () => {
     if (!audioRef.current) return;
     audioRef.current.pause();
+
+    setLastAnswerCorrect(null); // reset cat
+
     setCurrentLineIndex((prev) => Math.max(0, prev - 1));
+  };
+
+  const replayLine = () => {
+    setLastAnswerCorrect(null);
+    playLine();
   };
 
   const restartGame = () => {
@@ -120,15 +130,15 @@ const Game = () => {
     if (!correct || correct === "...") return;
 
     if (mode === "normal") {
-    if (userInput === correct) {
-      setLastAnswerCorrect(true);
-      skipLine();
+      if (userInput === correct) {
+        setLastAnswerCorrect(true);
+        skipLine();
+      } else {
+        setLastAnswerCorrect(false);
+      }
     } else {
-      setLastAnswerCorrect(false);
+      skipLine();
     }
-  } else {
-    skipLine();
-  }
   };
 
   const renderHighlightedLine = () => {
@@ -283,7 +293,7 @@ const Game = () => {
                 </button>
               )}
               <button
-                onClick={playLine}
+                onClick={replayLine}
                 className="px-4 py-2 bg-blue-500 text-white rounded-lg w-40 mx-auto font-semibold hover:bg-blue-600 transition"
               >
                 Replay Line
@@ -311,21 +321,26 @@ const Game = () => {
         </div>
       </div>
       {/*adding animations*/}
-{!isFinished && (
-  <div className="fixed bottom-6 flex flex-col items-center" 
-    style={{ left: lastAnswerCorrect === false ? "-0px" : "-140px" }}
-    >
-    <p className="text-xl font-semibold text-gray-600 mb-1 bg-white px-5 py-1 rounded-full shadow">
-      {lastAnswerCorrect === false ? "Try again!" : "You got this!"}
-    </p>
-    <img
-      src={lastAnswerCorrect === false ? "/assets/imgs/tryAgain-updated.gif" : "/assets/imgs/cheering-updated.gif"}
-      alt={lastAnswerCorrect === false ? "Try Again" : "Cheering"}
-      className="rounded-xl shadow-lg"
-      style={{ width: lastAnswerCorrect === false ? "200px" : "520px" }}
-    />
-  </div>
-)}
+      {!isFinished && (
+        <div
+          className="fixed bottom-6 flex flex-col items-center"
+          style={{ left: lastAnswerCorrect === false ? "-0px" : "-140px" }}
+        >
+          <p className="text-xl font-semibold text-gray-600 mb-1 bg-white px-5 py-1 rounded-full shadow">
+            {lastAnswerCorrect === false ? "Try again!" : "You got this!"}
+          </p>
+          <img
+            src={
+              lastAnswerCorrect === false
+                ? "/assets/imgs/tryAgain-updated.gif"
+                : "/assets/imgs/cheering-updated.gif"
+            }
+            alt={lastAnswerCorrect === false ? "Try Again" : "Cheering"}
+            className="rounded-xl shadow-lg"
+            style={{ width: lastAnswerCorrect === false ? "200px" : "520px" }}
+          />
+        </div>
+      )}
       <audio ref={audioRef} src={audioSrc} />
     </div>
   );
