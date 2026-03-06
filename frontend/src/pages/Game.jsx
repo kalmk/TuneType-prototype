@@ -346,7 +346,6 @@ const Game = () => {
                 : "/assets/imgs/cheering-updated.gif"
             }
             alt={lastAnswerCorrect === false ? "Try Again" : "Cheering"}
-            className="rounded-xl shadow-lg"
             style={{ width: lastAnswerCorrect === false ? "200px" : "520px" }}
           />
         </div>
