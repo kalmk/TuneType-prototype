@@ -25,6 +25,8 @@ const Game = () => {
 
   const [isComposing, setIsComposing] = useState(false);
 
+  const [lastAnswerCorrect, setLastAnswerCorrect] = useState(null); //states to add gifs
+
   /* ================= AUDIO ================= */
   const playLine = () => {
     if (!audioRef.current) return;
@@ -91,6 +93,7 @@ const Game = () => {
     setUserInputs([]);
     setIsFinished(false);
     playLine();
+    setLastAnswerCorrect(null);
   };
 
   const toggleSpeed = () => {
@@ -117,9 +120,15 @@ const Game = () => {
     if (!correct || correct === "...") return;
 
     if (mode === "normal") {
-      if (userInput === correct) skipLine();
-      else alert("Incorrect! Try again.");
-    } else skipLine();
+    if (userInput === correct) {
+      setLastAnswerCorrect(true);
+      skipLine();
+    } else {
+      setLastAnswerCorrect(false);
+    }
+  } else {
+    skipLine();
+  }
   };
 
   const renderHighlightedLine = () => {
@@ -301,7 +310,22 @@ const Game = () => {
           )}
         </div>
       </div>
-
+      {/*adding animations*/}
+{!isFinished && (
+  <div className="fixed bottom-6 flex flex-col items-center" 
+    style={{ left: lastAnswerCorrect === false ? "-0px" : "-140px" }}
+    >
+    <p className="text-xl font-semibold text-gray-600 mb-1 bg-white px-5 py-1 rounded-full shadow">
+      {lastAnswerCorrect === false ? "Try again!" : "You got this!"}
+    </p>
+    <img
+      src={lastAnswerCorrect === false ? "/assets/imgs/tryAgain-updated.gif" : "/assets/imgs/cheering-updated.gif"}
+      alt={lastAnswerCorrect === false ? "Try Again" : "Cheering"}
+      className="rounded-xl shadow-lg"
+      style={{ width: lastAnswerCorrect === false ? "200px" : "520px" }}
+    />
+  </div>
+)}
       <audio ref={audioRef} src={audioSrc} />
     </div>
   );
