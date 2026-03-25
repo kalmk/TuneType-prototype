@@ -25,9 +25,15 @@ const Welcome = () => {
         TUNETYPE
       </h1>
 
-      <p className="font-extrabold text-[clamp(0.75rem,2.5vw,1rem)] tracking-widest uppercase text-red-500 mb-9">
-        JAPANESE TYPING GAME
-      </p>
+      {/* Subtitle */}
+      <div className="flex flex-col items-center mb-9">
+        <p className="font-extrabold text-[clamp(0.75rem,2.5vw,1rem)] tracking-widest uppercase text-red-500">
+          JAPANESE TYPING GAME
+        </p>
+        <p className="font-bold text-[clamp(0.75rem,2.5vw,1rem)] tracking-widest text-red-500 mt-1">
+          日本語タイピングゲーム
+        </p>
+      </div>
 
       {/* CTA buttons */}
       <button
