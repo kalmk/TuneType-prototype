@@ -1,5 +1,5 @@
 import api from "../lib/axios";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../store/userStore";
 import { songs } from "../data/songs";
@@ -22,6 +22,8 @@ const Profile = () => {
   const [favoriteSongIds, setFavoriteSongIds] = useState([]);
   const [showPicSelector, setShowPicSelector] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -36,28 +38,20 @@ const Profile = () => {
         setLoading(false);
       }
     };
-
     fetchUser();
   }, [setUser]);
 
-  if (loading) {
-    return <p className="text-center mt-20 text-xl">Loading profile...</p>;
-  }
-
-  if (!user) {
-    return (
-      <p className="text-center mt-20 text-xl">
-        Please log in to view your profile.
-      </p>
-    );
-  }
+  const showToast = (msg, type = "success") => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 2500);
+  };
 
   const toggleFavoriteSong = (songId) => {
-    if (favoriteSongIds.includes(songId)) {
-      setFavoriteSongIds(favoriteSongIds.filter((id) => id !== songId));
-    } else {
-      setFavoriteSongIds([...favoriteSongIds, songId]);
-    }
+    setFavoriteSongIds((prev) =>
+      prev.includes(songId)
+        ? prev.filter((id) => id !== songId)
+        : [...prev, songId],
+    );
   };
 
   const selectProfilePic = (pic) => {
@@ -66,118 +60,190 @@ const Profile = () => {
   };
 
   const saveProfile = async () => {
+    setSaving(true);
     try {
       const { data } = await api.put("/users/update", {
         profilePic: user.profilePic,
         bio,
         favoriteSongs: favoriteSongIds,
       });
-
       setUser(data);
-
-      alert("Profile updated!");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to save profile.");
+      showToast("Profile saved");
+    } catch {
+      showToast("Failed to save", "error");
+    } finally {
+      setSaving(false);
     }
   };
 
-  return (
-    <div
-      className="min-h-screen bg-yellow-50 p-6 flex flex-col items-center"
-      style={{
-        backgroundColor: "#fef9e7",
-        backgroundImage: `
-          radial-gradient(circle at 10px 10px, #f6d365 5%, transparent 6%),
-          radial-gradient(circle at 30px 30px, #f6d365 5%, transparent 6%)
-        `,
-        backgroundSize: "40px 40px",
-      }}
-    >
-      {/* Back button */}
-      <button
-        onClick={() => navigate("/homepage")}
-        className="self-start mb-4 px-4 py-2 bg-white border-2 border-black rounded-lg font-bold hover:bg-gray-200 transition"
-      >
-        Back to Homepage
-      </button>
-
-      {/* Profile picture */}
-      <div
-        className="w-32 h-32 rounded-full overflow-hidden border-4 border-black mb-4 cursor-pointer"
-        onClick={() => setShowPicSelector(true)}
-      >
-        <img
-          src={`/assets/profilePics/${user.profilePic || "neutral.jpeg"}`}
-          alt="Profile"
-          className="w-full h-full object-cover"
-        />
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-amber-100">
+        <div className="w-12 h-12 border-4 border-amber-300 border-t-black rounded-full animate-spin" />
       </div>
+    );
+  }
 
-      {showPicSelector && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-xl">
-            <h3 className="text-xl font-bold mb-4">Select Profile Picture</h3>
-            <div className="grid grid-cols-3 gap-4">
-              {profilePics.map((pic) => (
-                <img
-                  key={pic}
-                  src={`/assets/profilePics/${pic}`}
-                  alt={pic}
-                  className="w-20 h-20 rounded-full cursor-pointer border-2 border-black hover:border-green-500"
-                  onClick={() => selectProfilePic(pic)}
-                />
-              ))}
-            </div>
-            <button
-              className="mt-4 px-4 py-2 bg-red-200 border-2 border-black rounded-lg"
-              onClick={() => setShowPicSelector(false)}
-            >
-              Cancel
-            </button>
-          </div>
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-amber-100">
+        <p className="text-lg font-bold">Please log in to view your profile</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-amber-100 p-6 font-sans text-gray-900">
+      {/* Toast */}
+      {toast && (
+        <div
+          className={`fixed top-5 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full border-2 shadow-md z-50
+          ${
+            toast.type === "error"
+              ? "bg-red-400 text-white border-black"
+              : "bg-black text-amber-300 border-amber-300"
+          }`}
+        >
+          {toast.msg}
         </div>
       )}
 
-      <h2 className="text-3xl font-bold mb-2">{user.userName}</h2>
+      {/* Back */}
+      <button
+        onClick={() => navigate("/homepage")}
+        className="mb-6 px-4 py-1 border-2 border-black rounded-lg bg-white shadow hover:bg-gray-100"
+      >
+        Back
+      </button>
 
-      {/* Bio */}
-      <div className="w-full max-w-xl mb-6">
-        <label className="block font-bold mb-1">Bio:</label>
-        <textarea
-          className="w-full border-2 border-black rounded-lg p-2"
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-          rows={4}
-        />
+      {/* Avatar */}
+      <div className="flex flex-col items-center mb-6">
+        <div
+          onClick={() => setShowPicSelector(true)}
+          className="w-28 h-28 rounded-full border-4 border-black shadow-md overflow-hidden cursor-pointer relative"
+        >
+          <img
+            src={`/assets/profilePics/${user.profilePic || "neutral.jpeg"}`}
+            alt="Profile"
+            className="w-full h-full object-cover"
+          />
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-gray-500 opacity-0 hover:opacity-30 transition-opacity rounded-full" />
+        </div>
+
+        <h1 className="text-2xl font-bold mt-3">{user.userName}</h1>
       </div>
 
-      {/* Favorite Songs */}
-      <div className="w-full max-w-xl">
-        <h3 className="text-xl font-bold mb-2">Favorite Songs:</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {songs.map((song) => (
-            <button
-              key={song.id}
-              onClick={() => toggleFavoriteSong(song.id)}
-              className={`p-2 border-2 rounded-lg text-left ${
-                favoriteSongIds.includes(song.id)
-                  ? "bg-blue-300 border-black font-bold"
-                  : "bg-white border-gray-300"
-              }`}
-            >
-              {song.name}
-            </button>
-          ))}
+      {/* Cards */}
+      <div className="max-w-xl mx-auto flex flex-col gap-5">
+        {/* Bio */}
+        <div className="bg-white border-4 border-black rounded-2xl p-4 shadow">
+          <div className="font-bold mb-2">BIO</div>
+          <textarea
+            className="w-full border-2 border-black rounded-lg p-2 bg-amber-50 focus:outline-none
+             focus:ring-2 focus:ring-amber-400"
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            rows={3}
+          />
+          <div className="text-right text-xs text-gray-400 mt-1">
+            {bio.length} / 200
+          </div>
+        </div>
+
+        {/* Favorite Songs */}
+        <div className="bg-white border-4 border-black rounded-2xl p-4 shadow">
+          <div className="flex justify-between mb-2 font-bold">
+            <span>FAVORITE SONGS</span>
+            {favoriteSongIds.length > 0 && (
+              <span className="px-3 py-0.5 text-xs font-bold border-2 border-black bg-amber-400 rounded-full">
+                {favoriteSongIds.length}
+              </span>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            {songs.map((song) => {
+              const active = favoriteSongIds.includes(song.id);
+              return (
+                <button
+                  key={song.id}
+                  onClick={() => toggleFavoriteSong(song.id)}
+                  className={`text-sm px-3 py-2 rounded-lg border-2 text-left font-semibold transition
+                    ${
+                      active
+                        ? "bg-amber-400 border-black shadow"
+                        : "bg-amber-50 border-gray-300 hover:border-amber-400"
+                    }`}
+                >
+                  {song.name}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      <button
-        className="mt-4 px-6 py-2 bg-green-300 border-2 border-black rounded-lg font-bold hover:bg-green-400 transition"
-        onClick={saveProfile}
-      >
-        Save Profile
-      </button>
+      {/* Save */}
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={saveProfile}
+          disabled={saving}
+          className="px-10 py-3 bg-green-600 text-white font-bold text-lg rounded-xl border-4 border-black shadow
+          hover:bg-green-700 disabled:opacity-50 flex items-center justify-center"
+        >
+          {saving ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          ) : (
+            "SAVE PROFILE"
+          )}
+        </button>
+      </div>
+
+      {/* Modal */}
+      {showPicSelector && (
+        <div
+          onClick={() => setShowPicSelector(false)}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white border-4 border-black rounded-2xl p-5 w-full max-w-sm relative"
+          >
+            <button
+              onClick={() => setShowPicSelector(false)}
+              className="absolute top-3 right-3 w-8 h-8 border-2 border-black rounded-full bg-white"
+            >
+              X
+            </button>
+
+            <div className="text-center font-bold mb-4">
+              Choose your picture
+            </div>
+
+            <div className="grid grid-cols-3 gap-3">
+              {profilePics.map((pic) => (
+                <div
+                  key={pic}
+                  onClick={() => selectProfilePic(pic)}
+                  className={`aspect-square rounded-full overflow-hidden border-2 cursor-pointer
+                    ${
+                      user.profilePic === pic
+                        ? "border-black shadow"
+                        : "border-gray-300 hover:border-amber-400"
+                    }`}
+                >
+                  <img
+                    src={`/assets/profilePics/${pic}`}
+                    alt={pic}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
