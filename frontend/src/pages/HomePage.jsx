@@ -1,15 +1,12 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { songs } from "../data/songs";
-import { useState } from "react";
 import useUserStore from "../store/userStore";
 import api from "../lib/axios";
 import JoinedUsers from "../components/JoinedUsers";
 
 const HomePage = () => {
   const navigate = useNavigate();
-
   const user = useUserStore((state) => state.user);
-
   const clearUser = useUserStore((state) => state.clearUser);
 
   const handleLogout = async () => {
@@ -23,172 +20,101 @@ const HomePage = () => {
   };
 
   return (
-    <div
-      className="relative flex flex-col items-center justify-center min-h-screen p-6"
-      style={{
-        backgroundColor: "#fef9e7",
-        backgroundImage: `
-          radial-gradient(circle at 10px 10px, #f6d365 5%, transparent 6%),
-          radial-gradient(circle at 30px 30px, #f6d365 5%, transparent 6%)
-        `,
-        backgroundSize: "40px 40px",
-      }}
-    >
-      {user ? <h2>Welcome, {user.userName}!</h2> : <h2>Please log in</h2>}
-
-      {/* profile button */}
-      <header className="absolute top-4 right-4 z-10 flex gap-4 items-center">
-        {user && (
+    <div className="min-h-screen p-6 bg-amber-100 font-sans">
+      {/* Header */}
+      <header className="flex justify-between items-center mb-10">
+        <div className="text-2xl font-bold">
+          {user ? (
+            <>
+              Hey, <span className="text-amber-600">{user.userName}</span>
+            </>
+          ) : (
+            <>
+              Welcome, <span className="text-amber-600">Guest</span>
+            </>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="px-4 py-1 border-2 border-gray-900 rounded-lg bg-amber-200
+               text-amber-700 font-bold shadow-md hover:bg-amber-300 transition"
+            >
+              Logout
+            </button>
+          )}
           <button
-            onClick={handleLogout}
-            className="bg-red-200 border-2 border-black px-4 py-1 rounded-lg font-bold hover:bg-red-300 transition"
+            onClick={() => navigate("/profile")}
+            className="flex items-center gap-2 px-3 py-1 border-2 border-gray-900 rounded-lg
+             bg-white shadow-md hover:bg-gray-100 transition"
           >
-            Logout
+            <div
+              className="w-8 h-8 rounded-full bg-amber-400 border-2 border-gray-900 flex 
+            items-center justify-center text-sm font-bold"
+            >
+              {user ? user.userName?.[0]?.toUpperCase() : "?"}
+            </div>
+            Profile
           </button>
-        )}
-
-        <button
-          className="flex items-center gap-2"
-          onClick={() => navigate("/profile")}
-        >
-          <div className="w-8 h-8 border-2 border-black rounded-full flex items-center justify-center bg-white">
-            C:
-          </div>
-          <span className="font-bold">Profile</span>
-        </button>
+        </div>
       </header>
 
-      {/* Let's Play Button with music notes around it */}
-      <div className="relative flex justify-center mb-16 z-10 group">
-        {/* Music notes around the button */}
-        <div
-          className="absolute text-5xl animate-shake"
-          style={{ left: "85px", top: "-70px" }}
-        >
-          ♩
-        </div>
-        <div
-          className="absolute text-5xl animate-shake"
-          style={{ left: "-50px", top: "-40px" }}
-        >
-          ♪
-        </div>
-        <div
-          className="absolute text-5xl animate-shake"
-          style={{ left: "-110px", top: "20px" }}
-        >
-          ♫
-        </div>
-        <div
-          className="absolute text-4xl animate-shake"
-          style={{ right: "-60px", top: "-50px" }}
-        >
-          ♬
-        </div>
-        <div
-          className="absolute text-5xl animate-shake"
-          style={{ right: "-80px", top: "20px" }}
-        >
-          ♪
-        </div>
-        <div
-          className="absolute text-4xl animate-shake"
-          style={{ left: "-40px", top: "80px" }}
-        >
-          ♬
-        </div>
-        <div
-          className="absolute text-5xl animate-shake"
-          style={{ right: "-40px", top: "80px" }}
-        >
-          ♫
-        </div>
-        <div
-          className="absolute text-5xl animate-shake"
-          style={{ right: "80px", top: "90px" }}
-        >
-          ♩
-        </div>
-
+      {/* Hero */}
+      <div className="flex flex-col items-center mb-10 relative">
         <button
           onClick={() => navigate("/songs")}
-          className="bg-white border-4 border-black px-12 py-4 rounded-2xl text-2xl font-bold hover:bg-green-300 transition-colors shadow-lg"
+          className="relative z-10 px-10 py-4 bg-green-600 text-white font-bold text-2xl 
+          rounded-2xl border-4 border-gray-900 shadow-lg hover:bg-green-700 transition"
         >
-          LET'S PLAY!
+          LET'S PLAY
         </button>
       </div>
 
-      <style>{`
-        @keyframes shake1 {
-          0%, 100% { transform: rotate(10deg) translateX(0); }
-          50% { transform: rotate(10deg) translateX(3px); }
-        }
-        @keyframes shake2 {
-          0%, 100% { transform: rotate(-10deg) translateX(0); }
-          50% { transform: rotate(-10deg) translateX(-3px); }
-        }
-        @keyframes shake3 {
-          0%, 100% { transform: rotate(0deg) translateY(0); }
-          50% { transform: rotate(0deg) translateY(3px); }
-        }
-        @keyframes shake4 {
-          0%, 100% { transform: rotate(-10deg) translateY(0); }
-          50% { transform: rotate(-10deg) translateY(-3px); }
-        }
-        @keyframes shake5 {
-          0%, 100% { transform: rotate(0deg); }
-          50% { transform: rotate(9deg); }
-        }
-        @keyframes shake6 {
-          0%, 100% { transform: rotate(12deg); }
-          50% { transform: rotate(20deg); }
-        }
-        @keyframes shake7 {
-          0%, 100% { transform: rotate(0deg) translateX(0); }
-          50% { transform: rotate(0deg) translateX(3px); }
-        }
-        @keyframes shake8 {
-          0%, 100% { transform: rotate(-10deg) translateY(0); }
-          50% { transform: rotate(-10deg) translateY(-3px); }
-        }
-        
-        .group:hover .animate-shake:nth-child(1) { animation: shake1 0.5s ease-in-out infinite; }
-        .group:hover .animate-shake:nth-child(2) { animation: shake2 0.5s ease-in-out infinite; }
-        .group:hover .animate-shake:nth-child(3) { animation: shake3 0.5s ease-in-out infinite; }
-        .group:hover .animate-shake:nth-child(4) { animation: shake4 0.5s ease-in-out infinite; }
-        .group:hover .animate-shake:nth-child(5) { animation: shake5 0.5s ease-in-out infinite; }
-        .group:hover .animate-shake:nth-child(6) { animation: shake6 0.5s ease-in-out infinite; }
-        .group:hover .animate-shake:nth-child(7) { animation: shake7 0.5s ease-in-out infinite; }
-        .group:hover .animate-shake:nth-child(8) { animation: shake8 0.5s ease-in-out infinite; }
-      `}</style>
-
-      {/* Placeholder for songlist and friend activity sections */}
-      <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 z-10 mt-10">
-        <div className="border-4 border-black rounded-3xl p-6 bg-white">
-          <h2 className="text-xl font-bold mb-4">SONGLIST</h2>
-          <div className="space-y-2 max-h-96 overflow-y-auto">
-            {songs.map((song) => (
+      {/* Content Grid */}
+      <div className="grid gap-5 max-w-5xl mx-auto sm:grid-cols-2 items-stretch">
+        {/* Songlist */}
+        <div className="flex flex-col bg-white border-4 border-gray-900 rounded-2xl p-5 shadow-lg h-full">
+          <div className="flex justify-between items-center mb-3 text-lg font-bold">
+            <span>SONGLIST</span>
+            <span className="bg-amber-400 border-2 border-gray-900 rounded-full px-3 py-0.5 text-sm font-extrabold">
+              {songs.length} tracks
+            </span>
+          </div>
+          <div className="flex-1 overflow-y-auto pr-2 max-h-[calc(4*3.25rem)]">
+            {songs.map((song, i) => (
               <div
                 key={song.id}
-                className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded"
+                className="flex items-center gap-3 p-2 rounded-lg border-2 border-transparent
+                 hover:border-amber-400 hover:bg-amber-50 transition"
               >
-                <div className="flex-1">
-                  <div className="font-bold">{song.name}</div>
-                  <div className="text-sm text-gray-600">{song.duration}</div>
+                <div className="text-gray-500 w-5 text-right flex-shrink-0 font-bold">
+                  {i + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-extrabold text-sm truncate">
+                    {song.name}
+                  </div>
+                  <div className="text-gray-500 text-xs">{song.duration}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Friends / Users List */}
-        <div className="border-4 border-black rounded-3xl p-6 bg-white">
-          <h2 className="text-xl font-bold mb-4">FRIENDS JOINED</h2>
-          <div className="max-h-96 overflow-y-auto">
+        {/* Friends Joined */}
+        <div
+          className="flex flex-col bg-white border-4 border-gray-900 rounded-2xl 
+        p-5 shadow-lg h-full"
+        >
+          <div className="text-lg font-bold mb-3">FRIENDS JOINED</div>
+          <div className="flex-1 overflow-y-auto pr-2 max-h-[calc(4*3.25rem)]">
             {user ? (
               <JoinedUsers />
             ) : (
-              <p className="text-gray-500 italic">Log in to view users</p>
+              <div className="text-center py-10 text-gray-400">
+                Log in to see who's playing!
+              </div>
             )}
           </div>
         </div>
