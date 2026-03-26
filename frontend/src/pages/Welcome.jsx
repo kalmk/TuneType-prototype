@@ -9,10 +9,7 @@ const Welcome = () => {
     p-8 pt-8 pb-28 overflow-hidden bg-amber-100 font-sans"
     >
       {/* Logo */}
-      <div
-        className="mb-2 relative w-40 h-40 flex items-center justify-centerborder-4
-       border-gray-900 overflow-hidden transition-transform"
-      >
+      <div className="mb-2 w-40 h-40 flex items-center justify-center">
         <img
           src="/assets/imgs/tunetype-logo.png"
           alt="TuneType Logo"
