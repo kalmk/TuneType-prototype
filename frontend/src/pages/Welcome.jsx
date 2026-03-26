@@ -55,12 +55,6 @@ const Welcome = () => {
         onClick={() => navigate("/signup")}
       >
         Sign Up / Login
-        <span
-          className="absolute -top-2 -right-3 rotate-12 bg-red-500
-         text-white text-xs px-2 py-0.5 border-2 border-gray-900 rounded-full"
-        >
-          FREE
-        </span>
       </button>
 
       {/* Cat mascot */}
