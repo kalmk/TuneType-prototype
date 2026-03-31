@@ -1,18 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+const songs = [
+  { id: "rabbit", name: "うさぎ", nameEn: "Rabbit" },
+  { id: "katatataki", name: "肩たたき", nameEn: "Shoulder Pat" },
+  { id: "moon", name: "つき", nameEn: "Moon" },
+  { id: "doll", name: "人形", nameEn: "Doll" },
+];
+
+const MODES = [
+  { id: "normal", label: "Normal", desc: "Type the lyrics at your own pace" },
+  { id: "quiz", label: "Quiz", desc: "Fill in the missing characters" },
+];
+
+const SCRIPTS = [
+  { id: "kana", label: "Kana", sub: "ひらがな・カタカナ" },
+  { id: "kanji", label: "Kanji", sub: "漢字まじり" },
+];
+
 const SongSelect = () => {
   const navigate = useNavigate();
-
-  // List of songs from songs.js
-  const songs = [
-    { id: "rabbit", name: "うさぎ" },
-    { id: "katatataki", name: "肩たたき"},
-    { id: "moon", name: "つき"},
-    { id: "doll", name: "人形"},
-
-  ];
-
   const [selectedSong, setSelectedSong] = useState(null);
   const [selectedMode, setSelectedMode] = useState("normal");
   const [selectedScript, setSelectedScript] = useState("kana");
@@ -20,110 +27,139 @@ const SongSelect = () => {
   const handleStart = () => {
     if (selectedSong) {
       navigate(
-        `/play/${selectedSong}?mode=${selectedMode}&script=${selectedScript}`
+        `/play/${selectedSong}?mode=${selectedMode}&script=${selectedScript}`,
       );
     }
   };
 
-  const handleBackHome = () => {
-    navigate("/homepage"); // navigate to HomePage
-  };
-
   return (
-    <div
-      className="flex flex-col items-center justify-center min-h-screen p-6"
-      style={{
-        backgroundColor: "#fef9e7",
-        backgroundImage: `radial-gradient(circle at 10px 10px, #f6d365 5%, transparent 6%),
-                          radial-gradient(circle at 30px 30px, #f6d365 5%, transparent 6%)`,
-        backgroundSize: "40px 40px",
-      }}
-    >
-      <div className="w-full max-w-6xl flex flex-col md:flex-row gap-6 bg-white shadow-lg rounded-xl p-6">
-        {/* LEFT PANEL: Songs list */}
-        <div className="md:w-1/3 bg-gray-100 p-4 rounded-xl shadow-inner">
-          <h2 className="font-semibold mb-4 text-xl text-center">Songs</h2>
-          <ul className="space-y-2">
-            {songs.map((song) => (
-              <li
-                key={song.id}
-                className={`p-3 cursor-pointer rounded-lg border text-center transition-all duration-200 ${
+    <div className="min-h-screen bg-amber-100 text-gray-900 flex flex-col items-center p-6">
+      {/* Top bar */}
+      <div className="w-full max-w-3xl flex items-center gap-4 mb-6">
+        <button
+          onClick={() => navigate("/homepage")}
+          className="px-4 py-1 border-2 border-black rounded-lg 
+          bg-white shadow hover:bg-gray-100"
+        >
+          Back
+        </button>
+
+        <h1 className="text-2xl font-bold tracking-wide">SONG SELECT</h1>
+      </div>
+
+      {/* Layout */}
+      <div className="w-full max-w-3xl grid gap-5 sm:grid-cols-[1fr_1.5fr]">
+        {/* LEFT — songs */}
+        <div className="bg-white border-4 border-black rounded-2xl p-4 shadow">
+          <h2 className="font-bold mb-3">SONGS</h2>
+
+          {songs.map((song) => (
+            <div
+              key={song.id}
+              onClick={() => setSelectedSong(song.id)}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg 
+                border-2 cursor-pointer mb-2 transition
+                ${
                   selectedSong === song.id
-                    ? "bg-blue-500 text-white border-blue-500"
-                    : "bg-gray-200"
+                    ? "bg-amber-400 border-black shadow"
+                    : "border-transparent hover:bg-amber-50 hover:border-amber-400"
                 }`}
-                onClick={() => setSelectedSong(song.id)}
-              >
-                {song.name}
-              </li>
-            ))}
-          </ul>
+            >
+              <div>
+                <div className="font-bold">{song.name}</div>
+                <div className="text-xs text-gray-500">{song.nameEn}</div>
+              </div>
+
+              {selectedSong === song.id && (
+                <span className="font-bold">Selected</span>
+              )}
+            </div>
+          ))}
         </div>
 
-        {/* RIGHT PANEL: Mode & Script selection */}
-        <div className="md:w-2/3 flex flex-col gap-6 bg-gray-100 p-4 rounded-xl shadow-inner">
-          {/* Game Mode */}
-          <div>
-            <h2 className="font-semibold mb-2 text-lg">Game Mode</h2>
-            <div className="flex gap-4">
-              {["normal", "quiz"].map((mode) => (
+        {/* RIGHT — options */}
+        <div
+          className="bg-white border-4 border-black rounded-2xl
+         p-4 shadow flex flex-col"
+        >
+          {/* Mode */}
+          <div className="mb-5">
+            <div className="text-sm font-bold mb-2">GAME MODE</div>
+
+            <div className="flex gap-2">
+              {MODES.map((m) => (
                 <button
-                  key={mode}
-                  className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                    selectedMode === mode
-                      ? "bg-green-500 text-white"
-                      : "bg-gray-200"
-                  }`}
-                  onClick={() => setSelectedMode(mode)}
+                  key={m.id}
+                  onClick={() => setSelectedMode(m.id)}
+                  className={`flex-1 p-3 rounded-xl border-2 text-center transition
+                    ${
+                      selectedMode === m.id
+                        ? "bg-amber-400 border-black shadow"
+                        : "bg-amber-50 border-gray-300 hover:border-amber-400"
+                    }`}
                 >
-                  {mode.charAt(0).toUpperCase() + mode.slice(1)}
+                  <div className="font-bold">{m.label}</div>
+                  <div className="text-xs text-gray-500 mt-1">{m.desc}</div>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Script selection */}
-          <div>
-            <h2 className="font-semibold mb-2 text-lg">Script</h2>
-            <div className="flex gap-4">
-              {["kana", "kanji"].map((script) => (
+          {/* Script */}
+          <div className="mb-5">
+            <div className="text-sm font-bold mb-2">SCRIPT</div>
+
+            <div className="flex gap-2">
+              {SCRIPTS.map((s) => (
                 <button
-                  key={script}
-                  className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                    selectedScript === script
-                      ? "bg-purple-500 text-white"
-                      : "bg-gray-200"
-                  }`}
-                  onClick={() => setSelectedScript(script)}
+                  key={s.id}
+                  onClick={() => setSelectedScript(s.id)}
+                  className={`flex-1 p-3 rounded-xl border-2 text-center transition
+                    ${
+                      selectedScript === s.id
+                        ? "bg-amber-400 border-black shadow"
+                        : "bg-amber-50 border-gray-300 hover:border-amber-400"
+                    }`}
                 >
-                  {script.charAt(0).toUpperCase() + script.slice(1)}
+                  <div className="font-bold">{s.label}</div>
+                  <div className="text-xs text-gray-500">{s.sub}</div>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Start button */}
-          <div className="flex justify-center gap-4 mt-4">
-            <button
-              onClick={handleStart}
-              disabled={!selectedSong}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all duration-200 ${
+          {/* Summary */}
+          {selectedSong && (
+            <div
+              className="bg-amber-50 border border-amber-300 rounded-lg
+             px-3 py-2 text-sm font-semibold mb-4"
+            >
+              {songs.find((s) => s.id === selectedSong)?.name} · {selectedMode}{" "}
+              · {selectedScript}
+            </div>
+          )}
+
+          <div className="flex-1" />
+
+          {/* Start */}
+          <button
+            onClick={handleStart}
+            disabled={!selectedSong}
+            className={`w-full py-3 text-lg font-bold rounded-xl border-4 transition
+              ${
                 selectedSong
-                  ? "bg-red-500 text-white hover:bg-red-600"
-                  : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                  ? "bg-green-600 text-white border-black shadow hover:bg-green-700"
+                  : "bg-gray-300 text-gray-500 border-gray-400 cursor-not-allowed"
               }`}
-            >
-              Start Game
-            </button>
+          >
+            {selectedSong ? "START GAME" : "SELECT A SONG"}
+          </button>
 
-            {/* Back to Home button */}
-            <button
-              onClick={handleBackHome}
-              className="px-6 py-3 rounded-lg font-semibold bg-blue-400 text-white hover:bg-blue-500 transition-all duration-200"
-            >
-              Back to Home
-            </button>
-          </div>
+          {!selectedSong && (
+            <p className="text-xs text-gray-400 text-center mt-2">
+              Select a song to begin
+            </p>
+          )}
         </div>
       </div>
     </div>
