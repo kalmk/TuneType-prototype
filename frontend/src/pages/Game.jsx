@@ -166,9 +166,7 @@ const Game = () => {
 
   /* ================= UI ================= */
   return (
-    <div
-      className="flex items-center justify-center min-h-screen bg-amber-100 p-6 "
-    >
+    <div className="flex items-center justify-center min-h-screen bg-amber-100 p-6 ">
       <div className="w-full max-w-6xl flex flex-col md:flex-row gap-6 bg-white shadow-lg rounded-xl p-6">
         {/* LEFT PANEL: Lyrics */}
         <div className="md:w-2/3 bg-gray-100 p-6 rounded-xl shadow-inner flex flex-col items-center">
@@ -323,24 +321,30 @@ const Game = () => {
         </div>
       </div>
       {/*adding animations*/}
-      {!isFinished && (
-        <div
-          className="fixed bottom-6 flex flex-col items-center"
-          style={{ left: lastAnswerCorrect === false ? "-0px" : "-140px" }}
-        >
+      {/* During game → only show TRY AGAIN */}
+      {!isFinished && lastAnswerCorrect === false && (
+        <div className="fixed bottom-6 left-0 flex flex-col items-center">
           <p className="text-xl font-semibold text-gray-600 mb-1 bg-white px-5 py-1 rounded-full shadow">
-            {lastAnswerCorrect === false
-              ? tryAgainMessages[tryAgainIndex]
-              : "You got this!"}
+            {tryAgainMessages[tryAgainIndex]}
           </p>
           <img
-            src={
-              lastAnswerCorrect === false
-                ? "/assets/imgs/tryAgain-updated.gif"
-                : "/assets/imgs/cheering-updated.gif"
-            }
-            alt={lastAnswerCorrect === false ? "Try Again" : "Cheering"}
-            style={{ width: lastAnswerCorrect === false ? "200px" : "520px" }}
+            src="/assets/imgs/tryAgain-updated.gif"
+            alt="Try Again"
+            style={{ width: "200px" }}
+          />
+        </div>
+      )}
+
+      {/* After game → show CHEERING */}
+      {isFinished && (
+        <div className="fixed bottom-6 left-0 flex flex-col items-center">
+          <p className="text-xl font-semibold text-gray-600 mb-1 bg-white px-5 py-1 rounded-full shadow">
+            Great job!
+          </p>
+          <img
+            src="/assets/imgs/cheering-updated.gif"
+            alt="Cheering"
+            style={{ width: "520px" }}
           />
         </div>
       )}
