@@ -320,8 +320,7 @@ const Game = () => {
           )}
         </div>
       </div>
-      {/*adding animations*/}
-      {/* During game → only show TRY AGAIN */}
+      {/* During game TRY AGAIN */}
       {!isFinished && lastAnswerCorrect === false && (
         <div className="fixed bottom-6 left-0 flex flex-col items-center">
           <p className="text-xl font-semibold text-gray-600 mb-1 bg-white px-5 py-1 rounded-full shadow">
@@ -335,16 +334,13 @@ const Game = () => {
         </div>
       )}
 
-      {/* After game → show CHEERING */}
+      {/* After game show CHEERING */}
       {isFinished && (
-        <div className="fixed bottom-6 left-0 flex flex-col items-center">
-          <p className="text-xl font-semibold text-gray-600 mb-1 bg-white px-5 py-1 rounded-full shadow">
-            Great job!
-          </p>
+        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 flex flex-row items-center gap-4 pointer-events-none px-4">
           <img
             src="/assets/imgs/cheering-updated.gif"
             alt="Cheering"
-            style={{ width: "520px" }}
+            className="w-32 sm:w-40 md:w-64 lg:w-80 xl:w-96 max-w-full h-auto"
           />
         </div>
       )}
