@@ -167,9 +167,9 @@ const Game = () => {
   /* ================= UI ================= */
   return (
     <div className="flex items-center justify-center min-h-screen bg-amber-100 p-6 ">
-      <div className="w-full max-w-6xl flex flex-col md:flex-row gap-6 bg-white shadow-lg rounded-xl p-6">
+      <div className="w-full max-w-6xl flex flex-col md:flex-row gap-6 bg-white shadow-lg rounded-xl p-6 border-2 border-gray-900">
         {/* LEFT PANEL: Lyrics */}
-        <div className="md:w-2/3 bg-gray-100 p-6 rounded-xl shadow-inner flex flex-col items-center">
+        <div className="md:w-2/3 bg-gray-100 p-6 rounded-xl shadow-inner flex flex-col items-center border-2 border-gray-900">
           <h1 className="text-2xl font-bold mb-4">{name}</h1>
 
           {/* Mode & Script badges */}
@@ -274,10 +274,10 @@ const Game = () => {
         </div>
 
         {/* RIGHT PANEL: Controls */}
-        <div className="md:w-1/3 flex flex-col items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-inner">
+        <div className="md:w-1/3 flex flex-col items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-inner border-2 border-gray-900">
           <button
             onClick={() => navigate("/songs")}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg w-40 mx-auto font-semibold hover:bg-gray-400 transition"
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg w-40 mx-auto font-bold tracking-wide hover:bg-gray-400 transition border-2 border-gray-900"
           >
             Back to Song Selection
           </button>
@@ -287,32 +287,32 @@ const Game = () => {
               {currentLineIndex > 0 && (
                 <button
                   onClick={previousLine}
-                  className="px-4 py-2 bg-gray-500 text-white rounded-lg w-40 mx-auto font-semibold hover:bg-gray-600 transition"
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg w-40 mx-auto font-bold tracking-wide hover:bg-gray-600 transition border-2 border-gray-900"
                 >
                   Previous Line
                 </button>
               )}
               <button
                 onClick={replayLine}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg w-40 mx-auto font-semibold hover:bg-blue-600 transition"
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg w-40 mx-auto font-bold tracking-wide hover:bg-blue-600 transition border-2 border-gray-900"
               >
                 Replay Line
               </button>
               <button
                 onClick={skipLine}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg w-40 mx-auto font-semibold hover:bg-green-600 transition"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg w-40 mx-auto font-bold tracking-wide hover:bg-green-700 transition border-2 border-gray-900"
               >
                 Skip Line
               </button>
               <button
                 onClick={restartGame}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg w-40 mx-auto font-semibold hover:bg-red-600 transition"
+                className="px-4 py-2 bg-red-600  text-white rounded-lg w-40 mx-auto font-bold tracking-wide hover:bg-red-700 transition border-2 border-gray-900"
               >
                 Restart Game
               </button>
               <button
                 onClick={toggleSpeed}
-                className="px-4 py-2 bg-purple-500 text-white rounded-lg w-40 mx-auto font-semibold hover:bg-purple-600 transition"
+                className="px-4 py-2 bg-purple-500  text-white rounded-lg w-40 mx-auto font-bold tracking-wide hover:bg-purple-600 transition border-2 border-gray-900"
               >
                 Speed: {speed}x
               </button>
