@@ -167,13 +167,7 @@ const Game = () => {
   /* ================= UI ================= */
   return (
     <div
-      className="flex items-center justify-center min-h-screen bg-gray-50 p-6 "
-      style={{
-        backgroundColor: "#fef9e7", // light sunflower yellow background
-        backgroundImage: `radial-gradient(circle at 10px 10px, #f6d365 5%, transparent 6%),
-                          radial-gradient(circle at 30px 30px, #f6d365 5%, transparent 6%)`,
-        backgroundSize: "40px 40px",
-      }}
+      className="flex items-center justify-center min-h-screen bg-amber-100 p-6 "
     >
       <div className="w-full max-w-6xl flex flex-col md:flex-row gap-6 bg-white shadow-lg rounded-xl p-6">
         {/* LEFT PANEL: Lyrics */}
