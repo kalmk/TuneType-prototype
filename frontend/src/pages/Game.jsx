@@ -167,17 +167,29 @@ const Game = () => {
   /* ================= UI ================= */
   return (
     <div className="flex items-center justify-center min-h-screen bg-amber-100 p-6 ">
-      <div className="w-full max-w-6xl flex flex-col md:flex-row gap-6 bg-white shadow-lg rounded-xl p-6 border-2 border-gray-900">
+      <div
+        className="w-full max-w-6xl flex flex-col md:flex-row gap-6 bg-white shadow-lg 
+      rounded-xl p-6 border-2 border-gray-900"
+      >
         {/* LEFT PANEL: Lyrics */}
-        <div className="md:w-2/3 bg-gray-100 p-6 rounded-xl shadow-inner flex flex-col items-center border-2 border-gray-900">
+        <div
+          className="md:w-2/3 bg-gray-100 p-6 rounded-xl shadow-inner flex flex-col 
+        items-center border-2 border-gray-900"
+        >
           <h1 className="text-2xl font-bold mb-4">{name}</h1>
 
           {/* Mode & Script badges */}
           <div className="flex gap-3 mb-6">
-            <span className="px-3 py-1 text-blue-800 text-sm font-semibold tracking-wide cursor-default">
+            <span
+              className="px-3 py-1 text-blue-800 text-sm font-semibold tracking-wide 
+            cursor-default"
+            >
               Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}
             </span>
-            <span className="px-3 py-1 text-purple-800 text-sm font-semibold tracking-wide cursor-default">
+            <span
+              className="px-3 py-1 text-purple-800 text-sm font-semibold tracking-wide 
+            cursor-default"
+            >
               Script: {script.charAt(0).toUpperCase() + script.slice(1)}
             </span>
           </div>
@@ -221,7 +233,8 @@ const Game = () => {
                 <div className="flex justify-center mt-6">
                   <button
                     onClick={restartGame}
-                    className="mt-6 px-6 py-3 bg-red-500 text-white rounded-lg w-40 text-lg font-semibold hover:bg-red-600 transition"
+                    className="mt-6 px-6 py-3 bg-red-500 text-white rounded-lg w-40 
+                    text-lg font-semibold hover:bg-red-600 transition"
                   >
                     Retry
                   </button>
@@ -232,7 +245,8 @@ const Game = () => {
                 <p className="text-3xl font-bold text-green-600">Good Job!</p>
                 <button
                   onClick={restartGame}
-                  className="mt-6 px-6 py-3 bg-red-500 text-white rounded-lg w-40 text-lg font-semibold hover:bg-red-600 transition"
+                  className="mt-6 px-6 py-3 bg-red-500 text-white rounded-lg w-40 
+                  text-lg font-semibold hover:bg-red-600 transition"
                 >
                   Retry
                 </button>
@@ -274,10 +288,14 @@ const Game = () => {
         </div>
 
         {/* RIGHT PANEL: Controls */}
-        <div className="md:w-1/3 flex flex-col items-center gap-3 bg-gray-100 p-4 rounded-xl shadow-inner border-2 border-gray-900">
+        <div
+          className="md:w-1/3 flex flex-col items-center gap-3 bg-gray-100 p-4 rounded-xl 
+        shadow-inner border-2 border-gray-900"
+        >
           <button
             onClick={() => navigate("/songs")}
-            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg w-40 mx-auto font-bold tracking-wide hover:bg-gray-400 transition border-2 border-gray-900"
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg w-40 mx-auto font-bold 
+            tracking-wide hover:bg-gray-400 transition border-2 border-gray-900"
           >
             Back to Song Selection
           </button>
@@ -287,32 +305,37 @@ const Game = () => {
               {currentLineIndex > 0 && (
                 <button
                   onClick={previousLine}
-                  className="px-4 py-2 bg-gray-500 text-white rounded-lg w-40 mx-auto font-bold tracking-wide hover:bg-gray-600 transition border-2 border-gray-900"
+                  className="px-4 py-2 bg-gray-500 text-white rounded-lg w-40 mx-auto font-bold 
+                  tracking-wide hover:bg-gray-600 transition border-2 border-gray-900"
                 >
                   Previous Line
                 </button>
               )}
               <button
                 onClick={replayLine}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg w-40 mx-auto font-bold tracking-wide hover:bg-blue-600 transition border-2 border-gray-900"
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg w-40 mx-auto font-bold 
+                tracking-wide hover:bg-blue-600 transition border-2 border-gray-900"
               >
                 Replay Line
               </button>
               <button
                 onClick={skipLine}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg w-40 mx-auto font-bold tracking-wide hover:bg-green-700 transition border-2 border-gray-900"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg w-40 mx-auto font-bold 
+                tracking-wide hover:bg-green-700 transition border-2 border-gray-900"
               >
                 Skip Line
               </button>
               <button
                 onClick={restartGame}
-                className="px-4 py-2 bg-red-600  text-white rounded-lg w-40 mx-auto font-bold tracking-wide hover:bg-red-700 transition border-2 border-gray-900"
+                className="px-4 py-2 bg-red-600  text-white rounded-lg w-40 mx-auto font-bold 
+                tracking-wide hover:bg-red-700 transition border-2 border-gray-900"
               >
                 Restart Game
               </button>
               <button
                 onClick={toggleSpeed}
-                className="px-4 py-2 bg-purple-500  text-white rounded-lg w-40 mx-auto font-bold tracking-wide hover:bg-purple-600 transition border-2 border-gray-900"
+                className="px-4 py-2 bg-purple-500  text-white rounded-lg w-40 mx-auto font-bold 
+                tracking-wide hover:bg-purple-600 transition border-2 border-gray-900"
               >
                 Speed: {speed}x
               </button>
@@ -321,22 +344,35 @@ const Game = () => {
         </div>
       </div>
       {/* During game TRY AGAIN */}
-      {!isFinished && lastAnswerCorrect === false && (
-        <div className="fixed bottom-6 left-0 flex flex-col items-center">
-          <p className="text-xl font-semibold text-gray-600 mb-1 bg-white px-5 py-1 rounded-full shadow">
-            {tryAgainMessages[tryAgainIndex]}
-          </p>
-          <img
-            src="/assets/imgs/tryAgain-updated.gif"
-            alt="Try Again"
-            style={{ width: "200px" }}
-          />
-        </div>
-      )}
+      <div
+        className={`fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 
+        flex flex-col items-center transition-all duration-500 ease-out z-50
+        ${
+          !isFinished && lastAnswerCorrect === false
+            ? "translate-x-0 opacity-100"
+            : "sm:-translate-x-full opacity-0 pointer-events-none"
+        }`}
+      >
+        <p
+          className="text-sm sm:text-lg md:text-xl font-semibold text-gray-600 mb-1
+         bg-white px-3 sm:px-5 py-1 rounded-full shadow text-center"
+        >
+          {tryAgainMessages[tryAgainIndex]}
+        </p>
+
+        <img
+          src="/assets/imgs/tryAgain-updated.gif"
+          alt="Try Again"
+          className="w-24 sm:w-32 md:w-40 lg:w-48 h-auto"
+        />
+      </div>
 
       {/* After game show CHEERING */}
       {isFinished && (
-        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 flex flex-row items-center gap-4 pointer-events-none px-4">
+        <div
+          className="fixed bottom-0 left-1/2 -translate-x-1/2 flex 
+        flex-row items-center gap-4 pointer-events-none px-4"
+        >
           <img
             src="/assets/imgs/cheering-updated.gif"
             alt="Cheering"
