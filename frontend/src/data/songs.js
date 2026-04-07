@@ -90,13 +90,16 @@ export const songs = [
     name: "人形",
     audioSrc: "/assets/songs/Doll_xf.mp3",
     lyrics: [
-      // work in progress
-      { kana: "...", kanji: "...", start: 0, end: 8.5 },
-      { kana: "うさぎうさぎ", kanji: "兎兎", start: 8.5, end: 11.5 },
-      { kana: "なにみてはねる", kanji: "何見て跳ねる", start: 11.5, end: 14.5 },
-      { kana: "じゅうごやおつきさま", kanji: "十五夜お月様", start: 14.5, end: 17.5 },
-      { kana: "みてはねる", kanji: "見て跳ねる", start: 17.5, end: 22 },
-      { kana: "...", kanji: "...", start: 22, end: 30 },
+      { kana: "...", kanji: "...", start: 0, end: 7 },
+      { kana: "わたしのにんぎょうは よいにんぎょう", kanji: "わたしの人形はよい人形", 
+        start: 7, end: 15 },
+      { kana: "めはぱっちりと いろじろで", kanji: "目はぱっちりといろじろで", 
+        start: 15, end: 23 },
+      { kana: "ちいさいくちもと あいらしく", kanji: "小さい口もと愛らしいく", 
+        start: 23, end: 31.8 },
+      { kana: "わたしのにんぎょうは よいにんぎょう", kanji: "わたしの人形はよい人形", 
+        start: 31.8, end: 40 },
+      { kana: "...", kanji: "...", start: 40, end: 44 },
     ],
   },
 
