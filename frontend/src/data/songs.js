@@ -1,4 +1,3 @@
-// src/data/songs.js
 export const songs = [
   {
     id: "rabbit",
