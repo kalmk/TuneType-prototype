@@ -10,15 +10,14 @@ INSTALLATION
 --------------------------------------------------------------------------------
 STEP 1 — Install Node.js
   
-Download and install Node.js from:
-https://nodejs.org/en/download
+Download and install Node.js from: https://nodejs.org/en/download
 
 npm will be installed automatically alongside Node.js.
 
 
 STEP 2 — Set Up MongoDB Atlas
 
-1. Sign up or log in at:       https://www.mongodb.com/
+1. Sign up or log in at: https://www.mongodb.com/
 2. Navigate to MongoDB Atlas
 3. Create a new Project
 4. Create a Cluster inside your Project
@@ -34,8 +33,8 @@ RUNNING TUNETYPE
 
 1. Open a terminal and navigate to the backend directory:
 
-    cd TuneType\backend               (Windows)
-    cd TuneType/backend               (Mac / Linux)
+    cd TuneType\backend (Windows)
+    cd TuneType/backend (Mac / Linux)
 
 2. Install dependencies:
 
@@ -61,8 +60,8 @@ you copied from MongoDB Atlas.
 
 5. Open a second terminal and navigate to the frontend directory:
 
-    cd TuneType\frontend              (Windows)
-    cd TuneType/frontend              (Mac / Linux)
+    cd TuneType\frontend (Windows)
+    cd TuneType/frontend (Mac / Linux)
 
 6. Install dependencies:
 
