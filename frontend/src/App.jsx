@@ -8,7 +8,6 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import api from "./lib/axios";
 import useUserStore from "./store/userStore";
 
